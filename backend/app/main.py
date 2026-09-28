@@ -1,5 +1,9 @@
+import mimetypes
 import os
 from pathlib import Path
+
+# slim-образ Python не знает webp — логотип отдавался как text/plain
+mimetypes.add_type("image/webp", ".webp")
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware

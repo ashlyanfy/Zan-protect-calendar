@@ -6,3 +6,6 @@ __pycache__/
 *.db
 .env
 dev-dist/
+backend/seed_users.json
+
+*.tsbuildinfo

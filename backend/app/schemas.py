@@ -15,6 +15,7 @@ class EventBase(BaseModel):
     start_time: datetime
     end_time: datetime | None = None
     reminder_minutes: int | None = Field(None, ge=0, le=20160)  # до 14 дней
+    is_shared: bool = False
 
     @field_validator("title", "location", "case_number")
     @classmethod
@@ -55,6 +56,8 @@ class EventOut(EventBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: str
+    owner_id: str | None = None
+    owner_name: str | None = None
     created_at: datetime
     updated_at: datetime
 
@@ -65,3 +68,45 @@ class EventOut(EventBase):
         if v is not None and v.tzinfo is None:
             return v.replace(tzinfo=timezone.utc)
         return v
+
+
+# ---------- Пользователи и авторизация ----------
+
+
+class LoginRequest(BaseModel):
+    login: str = Field(..., min_length=1, max_length=100)
+    password: str = Field(..., min_length=1, max_length=200)
+
+
+class UserCreate(BaseModel):
+    login: str = Field(..., min_length=3, max_length=100)
+    password: str = Field(..., min_length=6, max_length=200)
+    name: str = Field(..., min_length=1, max_length=200)
+
+    @field_validator("login", "name")
+    @classmethod
+    def strip_required(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError("Поле не может быть пустым")
+        return v
+
+
+class UserOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    login: str
+    name: str
+    role: str
+    created_at: datetime
+
+    @field_validator("created_at")
+    @classmethod
+    def ensure_utc(cls, v: datetime) -> datetime:
+        return v.replace(tzinfo=timezone.utc) if v.tzinfo is None else v
+
+
+class TokenResponse(BaseModel):
+    token: str
+    user: UserOut

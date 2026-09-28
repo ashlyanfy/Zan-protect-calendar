@@ -10,6 +10,9 @@ export interface CalendarEvent {
   start_time: string
   end_time: string | null
   reminder_minutes: number | null
+  is_shared: boolean
+  owner_id: string | null
+  owner_name: string | null
   created_at: string
   updated_at: string
 }
@@ -23,6 +26,15 @@ export interface EventPayload {
   start_time: string
   end_time: string | null
   reminder_minutes: number | null
+  is_shared: boolean
+}
+
+export interface User {
+  id: string
+  login: string
+  name: string
+  role: 'admin' | 'employee'
+  created_at: string
 }
 
 export const EVENT_TYPE_META: Record<EventType, { label: string; color: string; bg: string }> = {

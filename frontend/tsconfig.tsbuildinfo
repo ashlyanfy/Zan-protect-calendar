@@ -1,1 +1,0 @@
-{"root":["./src/app.tsx","./src/api.ts","./src/main.tsx","./src/notifications.ts","./src/types.ts","./src/vite-env.d.ts","./src/components/eventcard.tsx","./src/components/eventmodal.tsx","./src/components/monthview.tsx","./src/components/weekstrip.tsx"],"version":"5.9.3"}

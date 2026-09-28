@@ -87,6 +87,42 @@ body {
   font-size: 16px;
 }
 
+.brand-img {
+  height: 30px;
+  display: block;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.92;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--white);
+  font-size: 15px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
 .today-btn {
   border: 1px solid rgba(255, 255, 255, 0.5);
   background: rgba(255, 255, 255, 0.14);
@@ -695,6 +731,127 @@ body {
   font-family: inherit;
   cursor: pointer;
   white-space: nowrap;
+}
+
+/* ---------- Экран входа ---------- */
+.login-screen {
+  width: 100%;
+  max-width: 760px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(160deg, var(--blue-500) 0%, var(--blue-400) 45%, #8fb1ef 100%);
+}
+
+.login-hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--white);
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.login-logo {
+  width: min(240px, 70%);
+  display: block;
+}
+
+.login-hero p {
+  font-size: 14.5px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.login-card {
+  background: var(--white);
+  border-radius: 28px 28px 0 0;
+  padding: 26px 24px calc(env(safe-area-inset-bottom, 0px) + 30px);
+  box-shadow: 0 -10px 40px rgba(31, 42, 68, 0.15);
+}
+
+.login-card h2 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.login-card .btn {
+  width: 100%;
+  margin-top: 6px;
+}
+
+/* ---------- Список сотрудников ---------- */
+.team-list {
+  margin-bottom: 18px;
+}
+
+.team-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.team-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--blue-100);
+  color: var(--blue-600);
+  font-weight: 800;
+  font-size: 16px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.team-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.team-name {
+  font-size: 14.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.team-role {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--blue-600);
+  background: var(--blue-100);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.team-login {
+  font-size: 12.5px;
+  color: var(--ink-400);
+}
+
+.team-delete {
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0.55;
+  padding: 6px;
+}
+
+.team-delete:hover {
+  opacity: 1;
 }
 
 .toast {

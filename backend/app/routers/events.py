@@ -1,14 +1,35 @@
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy import or_, select
+from sqlalchemy.orm import Session, joinedload
 
 from ..database import get_db
-from ..models import Event
+from ..models import Event, User
 from ..schemas import EventCreate, EventOut, EventUpdate
+from ..security import get_current_user
 
 router = APIRouter(prefix="/api/events", tags=["events"])
+
+
+def _to_out(event: Event) -> EventOut:
+    out = EventOut.model_validate(event)
+    out.owner_name = event.owner.name if event.owner else None
+    return out
+
+
+def _get_visible_event(event_id: str, user: User, db: Session) -> Event:
+    event = db.get(Event, event_id, options=[joinedload(Event.owner)])
+    if event is None:
+        raise HTTPException(status_code=404, detail="Событие не найдено")
+    if not event.is_shared and event.owner_id != user.id:
+        raise HTTPException(status_code=404, detail="Событие не найдено")
+    return event
+
+
+def _check_can_edit(event: Event, user: User):
+    if user.role != "admin" and event.owner_id != user.id:
+        raise HTTPException(status_code=403, detail="Изменять может только автор события или администратор")
 
 
 @router.get("", response_model=list[EventOut])
@@ -16,48 +37,51 @@ def list_events(
     start: datetime | None = Query(None, description="Фильтр: события с этой даты"),
     end: datetime | None = Query(None, description="Фильтр: события до этой даты"),
     db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
 ):
-    stmt = select(Event).order_by(Event.start_time)
+    stmt = (
+        select(Event)
+        .options(joinedload(Event.owner))
+        .where(or_(Event.owner_id == user.id, Event.is_shared.is_(True)))
+        .order_by(Event.start_time)
+    )
     if start is not None:
         stmt = stmt.where(Event.start_time >= start)
     if end is not None:
         stmt = stmt.where(Event.start_time <= end)
-    return db.scalars(stmt).all()
+    return [_to_out(e) for e in db.scalars(stmt).all()]
 
 
 @router.post("", response_model=EventOut, status_code=201)
-def create_event(payload: EventCreate, db: Session = Depends(get_db)):
-    event = Event(**payload.model_dump())
+def create_event(payload: EventCreate, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    event = Event(**payload.model_dump(), owner_id=user.id)
     db.add(event)
     db.commit()
     db.refresh(event)
-    return event
+    return _to_out(event)
 
 
 @router.get("/{event_id}", response_model=EventOut)
-def get_event(event_id: str, db: Session = Depends(get_db)):
-    event = db.get(Event, event_id)
-    if event is None:
-        raise HTTPException(status_code=404, detail="Событие не найдено")
-    return event
+def get_event(event_id: str, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    return _to_out(_get_visible_event(event_id, user, db))
 
 
 @router.put("/{event_id}", response_model=EventOut)
-def update_event(event_id: str, payload: EventUpdate, db: Session = Depends(get_db)):
-    event = db.get(Event, event_id)
-    if event is None:
-        raise HTTPException(status_code=404, detail="Событие не найдено")
+def update_event(
+    event_id: str, payload: EventUpdate, db: Session = Depends(get_db), user: User = Depends(get_current_user)
+):
+    event = _get_visible_event(event_id, user, db)
+    _check_can_edit(event, user)
     for key, value in payload.model_dump().items():
         setattr(event, key, value)
     db.commit()
     db.refresh(event)
-    return event
+    return _to_out(event)
 
 
 @router.delete("/{event_id}", status_code=204)
-def delete_event(event_id: str, db: Session = Depends(get_db)):
-    event = db.get(Event, event_id)
-    if event is None:
-        raise HTTPException(status_code=404, detail="Событие не найдено")
+def delete_event(event_id: str, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    event = _get_visible_event(event_id, user, db)
+    _check_can_edit(event, user)
     db.delete(event)
     db.commit()

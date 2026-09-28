@@ -30,6 +30,11 @@ export default function EventCard({
           <span className="type-badge" style={{ color: meta.color, background: meta.bg }}>
             {meta.label}
           </span>
+          {event.is_shared && (
+            <span className="type-badge" style={{ color: '#22867a', background: '#e3f4f1' }}>
+              👥 {event.owner_name ?? 'Общее'}
+            </span>
+          )}
           {event.case_number && <span className="event-sub">Дело {event.case_number}</span>}
           {reminderLabel && <span className="event-bell">🔔 {reminderLabel}</span>}
         </div>

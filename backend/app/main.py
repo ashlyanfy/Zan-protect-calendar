@@ -6,10 +6,66 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from .database import Base, engine
-from .routers import events
+from sqlalchemy import inspect, select, text
+
+from .database import Base, SessionLocal, engine
+from .models import User
+from .routers import auth, events, users
+from .security import hash_password
 
 Base.metadata.create_all(bind=engine)
+
+
+def _migrate_and_seed():
+    # Мини-миграция: добавляем колонки в существующую таблицу events (create_all их не добавит)
+    inspector = inspect(engine)
+    existing = {c["name"] for c in inspector.get_columns("events")}
+    with engine.begin() as conn:
+        if "owner_id" not in existing:
+            conn.execute(text("ALTER TABLE events ADD COLUMN owner_id VARCHAR(36)"))
+        if "is_shared" not in existing:
+            conn.execute(text("ALTER TABLE events ADD COLUMN is_shared BOOLEAN NOT NULL DEFAULT FALSE"))
+
+    # Первый запуск: заводим аккаунты из env SEED_USERS (прод) или backend/seed_users.json (локально).
+    # Файл в .gitignore — пароли не попадают в репозиторий. Существующие логины не трогаем.
+    import json
+
+    seed_raw = os.getenv("SEED_USERS")
+    if not seed_raw:
+        seed_file = Path(__file__).resolve().parent.parent / "seed_users.json"
+        seed_raw = seed_file.read_text(encoding="utf-8") if seed_file.is_file() else None
+
+    with SessionLocal() as db:
+        if seed_raw:
+            for entry in json.loads(seed_raw):
+                login = entry["login"].strip().lower()
+                if db.scalar(select(User).where(User.login == login)) is None:
+                    db.add(
+                        User(
+                            login=login,
+                            password_hash=hash_password(entry["password"]),
+                            name=entry["name"],
+                            role=entry.get("role", "employee"),
+                        )
+                    )
+            db.commit()
+
+        admin = db.scalar(select(User).where(User.role == "admin"))
+        if admin is None:
+            admin = User(
+                login=os.getenv("ADMIN_LOGIN", "admin").strip().lower(),
+                password_hash=hash_password(os.getenv("ADMIN_PASSWORD", "zanprotect2026")),
+                name=os.getenv("ADMIN_NAME", "Администратор"),
+                role="admin",
+            )
+            db.add(admin)
+            db.flush()
+        # события, созданные до ввода аккаунтов, отдаём администратору
+        db.execute(text("UPDATE events SET owner_id = :oid WHERE owner_id IS NULL"), {"oid": admin.id})
+        db.commit()
+
+
+_migrate_and_seed()
 
 app = FastAPI(title="ZanProtect Calendar API", version="1.0.0")
 
@@ -22,6 +78,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(auth.router)
+app.include_router(users.router)
 app.include_router(events.router)
 
 

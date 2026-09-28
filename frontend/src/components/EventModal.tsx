@@ -6,12 +6,13 @@ import { EVENT_TYPE_META, REMINDER_OPTIONS } from '../types'
 interface Props {
   initialDay: Date
   editing: CalendarEvent | null
+  canEdit: boolean
   onSave: (payload: EventPayload) => Promise<void>
   onDelete: (() => Promise<void>) | null
   onClose: () => void
 }
 
-export default function EventModal({ initialDay, editing, onSave, onDelete, onClose }: Props) {
+export default function EventModal({ initialDay, editing, canEdit, onSave, onDelete, onClose }: Props) {
   const [title, setTitle] = useState(editing?.title ?? '')
   const [eventType, setEventType] = useState<EventType>(editing?.event_type ?? 'court')
   const [date, setDate] = useState(
@@ -29,6 +30,7 @@ export default function EventModal({ initialDay, editing, onSave, onDelete, onCl
   const [reminder, setReminder] = useState<string>(
     editing?.reminder_minutes != null ? String(editing.reminder_minutes) : '',
   )
+  const [isShared, setIsShared] = useState(editing?.is_shared ?? false)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
@@ -65,6 +67,7 @@ export default function EventModal({ initialDay, editing, onSave, onDelete, onCl
         start_time: start.toISOString(),
         end_time: end ? end.toISOString() : null,
         reminder_minutes: reminder === '' ? null : Number(reminder),
+        is_shared: isShared,
       })
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Не удалось сохранить')
@@ -88,10 +91,16 @@ export default function EventModal({ initialDay, editing, onSave, onDelete, onCl
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="modal">
         <div className="modal-handle" />
-        <h2>{editing ? 'Редактировать событие' : 'Новое событие'}</h2>
+        <h2>{!canEdit ? 'Просмотр события' : editing ? 'Редактировать событие' : 'Новое событие'}</h2>
 
+        {!canEdit && editing?.owner_name && (
+          <div className="notif-banner" style={{ marginBottom: 14 }}>
+            👥 Общее событие, автор — {editing.owner_name}
+          </div>
+        )}
         {error && <div className="form-error">{error}</div>}
 
+        <fieldset disabled={!canEdit} style={{ border: 'none' }}>
         <div className="field">
           <label>Название *</label>
           <input
@@ -145,6 +154,28 @@ export default function EventModal({ initialDay, editing, onSave, onDelete, onCl
         </div>
 
         <div className="field">
+          <label>Видимость</label>
+          <div className="type-chips">
+            <button
+              type="button"
+              className="type-chip"
+              style={!isShared ? { background: '#e7eefc', color: '#2f6bd8', borderColor: '#2f6bd8' } : undefined}
+              onClick={() => setIsShared(false)}
+            >
+              🔒 Личное
+            </button>
+            <button
+              type="button"
+              className="type-chip"
+              style={isShared ? { background: '#e3f4f1', color: '#22867a', borderColor: '#22867a' } : undefined}
+              onClick={() => setIsShared(true)}
+            >
+              👥 Общее для всех
+            </button>
+          </div>
+        </div>
+
+        <div className="field">
           <label>Напоминание 🔔</label>
           <select value={reminder} onChange={(e) => setReminder(e.target.value)}>
             {REMINDER_OPTIONS.map((o) => (
@@ -184,19 +215,22 @@ export default function EventModal({ initialDay, editing, onSave, onDelete, onCl
             maxLength={5000}
           />
         </div>
+        </fieldset>
 
         <div className="modal-actions">
-          {onDelete && (
+          {canEdit && onDelete && (
             <button className="btn btn-danger" onClick={handleDelete} disabled={busy}>
               🗑
             </button>
           )}
           <button className="btn btn-ghost" onClick={onClose} disabled={busy}>
-            Отмена
+            {canEdit ? 'Отмена' : 'Закрыть'}
           </button>
-          <button className="btn btn-primary" onClick={handleSave} disabled={busy}>
-            {busy ? 'Сохранение…' : 'Сохранить'}
-          </button>
+          {canEdit && (
+            <button className="btn btn-primary" onClick={handleSave} disabled={busy}>
+              {busy ? 'Сохранение…' : 'Сохранить'}
+            </button>
+          )}
         </div>
       </div>
     </div>

@@ -13,13 +13,24 @@ import {
   subWeeks,
 } from 'date-fns'
 import { ru } from 'date-fns/locale'
-import { createEvent, deleteEvent, fetchEvents, updateEvent } from './api'
+import {
+  UnauthorizedError,
+  createEvent,
+  deleteEvent,
+  fetchEvents,
+  fetchMe,
+  getToken,
+  setToken,
+  updateEvent,
+} from './api'
 import MonthView from './components/MonthView'
 import WeekStrip from './components/WeekStrip'
 import EventCard from './components/EventCard'
 import EventModal from './components/EventModal'
+import LoginScreen from './components/LoginScreen'
+import TeamModal from './components/TeamModal'
 import { checkReminders, ensureNotificationPermission } from './notifications'
-import type { CalendarEvent, EventPayload } from './types'
+import type { CalendarEvent, EventPayload, User } from './types'
 
 type ViewMode = 'day' | 'week' | 'month'
 
@@ -28,11 +39,14 @@ function capitalize(s: string): string {
 }
 
 export default function App() {
+  const [user, setUser] = useState<User | null>(null)
+  const [authChecked, setAuthChecked] = useState(false)
   const [view, setView] = useState<ViewMode>('month')
   const [selectedDay, setSelectedDay] = useState(new Date())
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState<CalendarEvent | null>(null)
+  const [teamOpen, setTeamOpen] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const [notifState, setNotifState] = useState<NotificationPermission | 'unsupported'>(
     'Notification' in window ? Notification.permission : 'unsupported',
@@ -45,16 +59,36 @@ export default function App() {
     toastTimer.current = window.setTimeout(() => setToast(null), 2600)
   }, [])
 
+  // Восстанавливаем сессию по сохранённому токену
+  useEffect(() => {
+    if (!getToken()) {
+      setAuthChecked(true)
+      return
+    }
+    fetchMe()
+      .then(setUser)
+      .catch(() => setToken(null))
+      .finally(() => setAuthChecked(true))
+  }, [])
+
+  const logout = useCallback(() => {
+    setToken(null)
+    setUser(null)
+    setEvents([])
+  }, [])
+
   // Загружаем события с запасом ±2 месяца вокруг выбранного дня
   const loadEvents = useCallback(async () => {
+    if (!user) return
     try {
       const start = subMonths(startOfMonth(selectedDay), 2)
       const end = addMonths(endOfMonth(selectedDay), 2)
       setEvents(await fetchEvents(start, end))
-    } catch {
-      showToast('Нет связи с сервером')
+    } catch (e) {
+      if (e instanceof UnauthorizedError) logout()
+      else showToast('Нет связи с сервером')
     }
-  }, [selectedDay, showToast])
+  }, [selectedDay, user, logout, showToast])
 
   useEffect(() => {
     loadEvents()
@@ -90,6 +124,18 @@ export default function App() {
   }
 
   async function handleSave(payload: EventPayload) {
+    try {
+      await doSave(payload)
+    } catch (e) {
+      if (e instanceof UnauthorizedError) {
+        logout()
+        return
+      }
+      throw e
+    }
+  }
+
+  async function doSave(payload: EventPayload) {
     if (editing) {
       const updated = await updateEvent(editing.id, payload)
       setEvents((prev) => prev.map((e) => (e.id === updated.id ? updated : e)))
@@ -138,17 +184,32 @@ export default function App() {
         )}`
       : capitalize(format(new Date(), "'Сегодня' d MMMM", { locale: ru }))
 
+  if (!authChecked) return null
+  if (!user) return <LoginScreen onLogin={setUser} />
+
+  const canEditSelected = editing == null || user.role === 'admin' || editing.owner_id === user.id
+
   return (
     <div className="app">
       <header className="header">
         <div className="header-top">
           <div className="brand">
-            <span className="brand-logo">⚖️</span>
-            ZanProtect
+            <img src="/logo.webp" alt="ZanProtect" className="brand-img" />
           </div>
-          <button className="today-btn" onClick={() => setSelectedDay(new Date())}>
-            Сегодня
-          </button>
+          <div className="header-actions">
+            <span className="user-name">{user.name}</span>
+            {user.role === 'admin' && (
+              <button className="icon-btn" onClick={() => setTeamOpen(true)} aria-label="Сотрудники" title="Сотрудники">
+                👥
+              </button>
+            )}
+            <button className="today-btn" onClick={() => setSelectedDay(new Date())}>
+              Сегодня
+            </button>
+            <button className="icon-btn" onClick={logout} aria-label="Выйти" title="Выйти">
+              ⎋
+            </button>
+          </div>
         </div>
         <div className="header-date">{headerDate}</div>
         <div className="header-nav">
@@ -291,6 +352,7 @@ export default function App() {
         <EventModal
           initialDay={selectedDay}
           editing={editing}
+          canEdit={canEditSelected}
           onSave={handleSave}
           onDelete={editing ? handleDelete : null}
           onClose={() => {
@@ -299,6 +361,8 @@ export default function App() {
           }}
         />
       )}
+
+      {teamOpen && <TeamModal onClose={() => setTeamOpen(false)} />}
 
       {toast && <div className="toast">{toast}</div>}
     </div>

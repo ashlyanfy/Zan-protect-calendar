@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "backend",
+      "runtimeExecutable": "C:\\Users\\tarih\\OneDrive\\Рабочий стол\\Law calendar\\backend\\.venv\\Scripts\\uvicorn.exe",
+      "runtimeArgs": ["app.main:app", "--port", "8000", "--app-dir", "C:\\Users\\tarih\\OneDrive\\Рабочий стол\\Law calendar\\backend"],
+      "port": 8000
+    },
+    {
+      "name": "frontend",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["C:\\Users\\tarih\\OneDrive\\Рабочий стол\\Law calendar\\frontend\\node_modules\\vite\\bin\\vite.js", "C:\\Users\\tarih\\OneDrive\\Рабочий стол\\Law calendar\\frontend"],
+      "port": 5173
+    }
+  ]
+}

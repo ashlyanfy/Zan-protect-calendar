@@ -52,13 +52,13 @@ export function checkReminders(events: CalendarEvent[]) {
       const meta = EVENT_TYPE_META[ev.event_type]
       const body = [
         `${meta.label} в ${formatTime(ev.start_time)}`,
-        ev.location ? `📍 ${ev.location}` : null,
+        ev.location ? `Место: ${ev.location}` : null,
         ev.case_number ? `Дело: ${ev.case_number}` : null,
       ]
         .filter(Boolean)
         .join('\n')
       try {
-        new Notification(`⏰ ${ev.title}`, { body, icon: '/icons/icon-192.png', tag: ev.id })
+        new Notification(ev.title, { body, icon: '/icons/icon-192.png', tag: ev.id })
       } catch {
         /* некоторые платформы требуют показа через SW — молча пропускаем */
       }

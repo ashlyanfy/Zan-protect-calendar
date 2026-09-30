@@ -1,5 +1,6 @@
 import type { CalendarEvent } from '../types'
 import { EVENT_TYPE_META, REMINDER_OPTIONS } from '../types'
+import { IconBell, IconPin, IconUsers } from './Icons'
 
 function fmtTime(iso: string): string {
   return new Date(iso).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
@@ -31,14 +32,25 @@ export default function EventCard({
             {meta.label}
           </span>
           {event.is_shared && (
-            <span className="type-badge" style={{ color: '#22867a', background: '#e3f4f1' }}>
-              👥 {event.owner_name ?? 'Общее'}
+            <span className="event-sub">
+              <IconUsers size={13} />
+              Общее{event.owner_name ? ` · ${event.owner_name}` : ''}
             </span>
           )}
           {event.case_number && <span className="event-sub">Дело {event.case_number}</span>}
-          {reminderLabel && <span className="event-bell">🔔 {reminderLabel}</span>}
+          {event.location && (
+            <span className="event-sub">
+              <IconPin size={13} />
+              {event.location}
+            </span>
+          )}
+          {reminderLabel && (
+            <span className="event-sub">
+              <IconBell size={13} />
+              {reminderLabel}
+            </span>
+          )}
         </div>
-        {event.location && <div className="event-meta"><span className="event-sub">📍 {event.location}</span></div>}
       </div>
     </div>
   )

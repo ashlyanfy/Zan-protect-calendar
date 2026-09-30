@@ -31,7 +31,9 @@ def _migrate_and_seed():
             conn.execute(text("ALTER TABLE events ADD COLUMN is_shared BOOLEAN NOT NULL DEFAULT FALSE"))
 
     # Первый запуск: заводим аккаунты из env SEED_USERS (прод) или backend/seed_users.json (локально).
-    # Файл в .gitignore — пароли не попадают в репозиторий. Существующие логины не трогаем.
+    # Файл в .gitignore — пароли не попадают в репозиторий.
+    # Сид срабатывает только на пустой базе: иначе смена логина сотрудником привела бы к тому,
+    # что при перезапуске его прежний логин создался бы заново со старым паролем.
     import json
 
     seed_raw = os.getenv("SEED_USERS")
@@ -40,18 +42,16 @@ def _migrate_and_seed():
         seed_raw = seed_file.read_text(encoding="utf-8") if seed_file.is_file() else None
 
     with SessionLocal() as db:
-        if seed_raw:
+        if seed_raw and db.scalar(select(User).limit(1)) is None:
             for entry in json.loads(seed_raw):
-                login = entry["login"].strip().lower()
-                if db.scalar(select(User).where(User.login == login)) is None:
-                    db.add(
-                        User(
-                            login=login,
-                            password_hash=hash_password(entry["password"]),
-                            name=entry["name"],
-                            role=entry.get("role", "employee"),
-                        )
+                db.add(
+                    User(
+                        login=entry["login"].strip().lower(),
+                        password_hash=hash_password(entry["password"]),
+                        name=entry["name"],
+                        role=entry.get("role", "employee"),
                     )
+                )
             db.commit()
 
         admin = db.scalar(select(User).where(User.role == "admin"))

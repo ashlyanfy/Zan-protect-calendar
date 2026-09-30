@@ -30,10 +30,13 @@ export default function LoginScreen({ onLogin }: { onLogin: (user: User) => void
     <div className="login-screen">
       <div className="login-hero">
         <img src="/logo.webp" alt="ZanProtect" className="login-logo" />
-        <p>Календарь юридических событий</p>
+        <h1>Календарь судебных заседаний и юридических событий</h1>
+        <p>
+          Общий график команды и личные дела каждого сотрудника в одном месте. Доступ — по личному логину и паролю.
+        </p>
       </div>
       <form className="login-card" onSubmit={handleSubmit}>
-        <h2>Вход</h2>
+        <h2>Вход в систему</h2>
         {error && <div className="form-error">{error}</div>}
         <div className="field">
           <label>Логин</label>

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from ..database import get_db
 from ..models import User
-from ..schemas import UserCreate, UserOut
+from ..schemas import UserCreate, UserOut, UserUpdate
 from ..security import hash_password, require_admin
 
 router = APIRouter(prefix="/api/users", tags=["users"])
@@ -27,6 +27,34 @@ def create_user(payload: UserCreate, db: Session = Depends(get_db), _admin: User
         role="employee",
     )
     db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+@router.patch("/{user_id}", response_model=UserOut)
+def update_user(
+    user_id: str,
+    payload: UserUpdate,
+    db: Session = Depends(get_db),
+    _admin: User = Depends(require_admin),
+):
+    """Админ меняет имя, логин или пароль любого аккаунта."""
+    user = db.get(User, user_id)
+    if user is None:
+        raise HTTPException(status_code=404, detail="Сотрудник не найден")
+
+    if payload.login is not None:
+        new_login = payload.login.lower()
+        if new_login != user.login:
+            if db.scalar(select(User).where(User.login == new_login)) is not None:
+                raise HTTPException(status_code=409, detail="Такой логин уже занят")
+            user.login = new_login
+    if payload.name is not None:
+        user.name = payload.name
+    if payload.password is not None:
+        user.password_hash = hash_password(payload.password)
+
     db.commit()
     db.refresh(user)
     return user

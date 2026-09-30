@@ -29,6 +29,17 @@ import EventCard from './components/EventCard'
 import EventModal from './components/EventModal'
 import LoginScreen from './components/LoginScreen'
 import TeamModal from './components/TeamModal'
+import ProfileModal from './components/ProfileModal'
+import {
+  IconArrowLeft,
+  IconBell,
+  IconChevronLeft,
+  IconChevronRight,
+  IconLogout,
+  IconPlus,
+  IconSettings,
+  IconUsers,
+} from './components/Icons'
 import { checkReminders, ensureNotificationPermission } from './notifications'
 import type { CalendarEvent, EventPayload, User } from './types'
 
@@ -47,6 +58,9 @@ export default function App() {
   const [modalOpen, setModalOpen] = useState(false)
   const [editing, setEditing] = useState<CalendarEvent | null>(null)
   const [teamOpen, setTeamOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
+  // Админ смотрит календарь сотрудника
+  const [viewingUser, setViewingUser] = useState<User | null>(null)
   const [toast, setToast] = useState<string | null>(null)
   const [notifState, setNotifState] = useState<NotificationPermission | 'unsupported'>(
     'Notification' in window ? Notification.permission : 'unsupported',
@@ -75,7 +89,10 @@ export default function App() {
     setToken(null)
     setUser(null)
     setEvents([])
+    setViewingUser(null)
   }, [])
+
+  const targetUserId = viewingUser ? viewingUser.id : null
 
   // Загружаем события с запасом ±2 месяца вокруг выбранного дня
   const loadEvents = useCallback(async () => {
@@ -83,23 +100,24 @@ export default function App() {
     try {
       const start = subMonths(startOfMonth(selectedDay), 2)
       const end = addMonths(endOfMonth(selectedDay), 2)
-      setEvents(await fetchEvents(start, end))
+      setEvents(await fetchEvents(start, end, targetUserId))
     } catch (e) {
       if (e instanceof UnauthorizedError) logout()
       else showToast('Нет связи с сервером')
     }
-  }, [selectedDay, user, logout, showToast])
+  }, [selectedDay, user, targetUserId, logout, showToast])
 
   useEffect(() => {
     loadEvents()
   }, [loadEvents])
 
-  // Проверка напоминаний каждые 30 секунд
+  // Напоминания — только для собственного календаря
   useEffect(() => {
+    if (viewingUser) return
     const id = window.setInterval(() => checkReminders(events), 30_000)
     checkReminders(events)
     return () => window.clearInterval(id)
-  }, [events])
+  }, [events, viewingUser])
 
   const dayEvents = useMemo(
     () =>
@@ -141,14 +159,14 @@ export default function App() {
       setEvents((prev) => prev.map((e) => (e.id === updated.id ? updated : e)))
       showToast('Событие обновлено')
     } else {
-      const created = await createEvent(payload)
+      const created = await createEvent(payload, targetUserId)
       setEvents((prev) => [...prev, created])
       setSelectedDay(new Date(created.start_time))
       showToast('Событие добавлено')
     }
     setModalOpen(false)
     setEditing(null)
-    if (payload.reminder_minutes != null) {
+    if (payload.reminder_minutes != null && !viewingUser) {
       const ok = await ensureNotificationPermission()
       setNotifState('Notification' in window ? Notification.permission : 'unsupported')
       if (!ok) showToast('Разрешите уведомления, чтобы получать напоминания')
@@ -182,43 +200,64 @@ export default function App() {
           'd MMM yyyy',
           { locale: ru },
         )}`
-      : capitalize(format(new Date(), "'Сегодня' d MMMM", { locale: ru }))
+      : capitalize(format(new Date(), "'сегодня' d MMMM yyyy", { locale: ru }))
 
   if (!authChecked) return null
   if (!user) return <LoginScreen onLogin={setUser} />
 
   const canEditSelected = editing == null || user.role === 'admin' || editing.owner_id === user.id
 
+  function openEvent(e: CalendarEvent) {
+    setEditing(e)
+    setModalOpen(true)
+  }
+
+  const dayTitle = capitalize(format(selectedDay, 'EEEE, d MMMM', { locale: ru }))
+
   return (
     <div className="app">
       <header className="header">
         <div className="header-top">
-          <div className="brand">
-            <img src="/logo.webp" alt="ZanProtect" className="brand-img" />
-          </div>
+          <img src="/logo.webp" alt="ZanProtect" className="brand-img" />
           <div className="header-actions">
             <span className="user-name">{user.name}</span>
             {user.role === 'admin' && (
               <button className="icon-btn" onClick={() => setTeamOpen(true)} aria-label="Сотрудники" title="Сотрудники">
-                👥
+                <IconUsers size={16} />
               </button>
             )}
+            <button
+              className="icon-btn"
+              onClick={() => setProfileOpen(true)}
+              aria-label="Мой аккаунт"
+              title="Мой аккаунт"
+            >
+              <IconSettings size={16} />
+            </button>
             <button className="today-btn" onClick={() => setSelectedDay(new Date())}>
               Сегодня
             </button>
             <button className="icon-btn" onClick={logout} aria-label="Выйти" title="Выйти">
-              ⎋
+              <IconLogout size={16} />
             </button>
           </div>
         </div>
-        <div className="header-date">{headerDate}</div>
+
         <div className="header-nav">
-          <span className="header-sub">{headerSub}</span>
+          <div>
+            <div className="header-date">{headerDate}</div>
+            <span className="header-sub">{headerSub}</span>
+          </div>
           <div className="nav-arrows">
-            <button onClick={() => navigate(-1)} aria-label="Назад">‹</button>
-            <button onClick={() => navigate(1)} aria-label="Вперёд">›</button>
+            <button onClick={() => navigate(-1)} aria-label="Назад">
+              <IconChevronLeft size={16} />
+            </button>
+            <button onClick={() => navigate(1)} aria-label="Вперёд">
+              <IconChevronRight size={16} />
+            </button>
           </div>
         </div>
+
         <div className="view-tabs">
           {(['day', 'week', 'month'] as ViewMode[]).map((v) => (
             <button key={v} className={view === v ? 'active' : ''} onClick={() => setView(v)}>
@@ -228,10 +267,24 @@ export default function App() {
         </div>
       </header>
 
+      {viewingUser && (
+        <div className="viewing-bar">
+          <span className="vb-label">Календарь сотрудника</span>
+          <span className="vb-name">
+            {viewingUser.name} · {viewingUser.login}
+          </span>
+          <button onClick={() => setViewingUser(null)}>
+            <IconArrowLeft size={14} />
+            Мой календарь
+          </button>
+        </div>
+      )}
+
       <main className="content">
-        {notifState === 'default' && (
+        {notifState === 'default' && !viewingUser && (
           <div className="notif-banner">
-            🔔 Включите уведомления, чтобы получать напоминания о заседаниях
+            <IconBell size={16} />
+            Включите уведомления, чтобы получать напоминания о заседаниях
             <button onClick={enableNotifications}>Включить</button>
           </div>
         )}
@@ -245,23 +298,11 @@ export default function App() {
               onSelectDay={(d) => setSelectedDay(d)}
             />
             <section className="day-panel">
-              <h3>{capitalize(format(selectedDay, 'EEEE, d MMMM', { locale: ru }))}</h3>
+              <h3>{dayTitle}</h3>
               {dayEvents.length === 0 ? (
-                <div className="empty-state">
-                  <span className="emoji">🗓️</span>
-                  Нет событий — нажмите «+», чтобы добавить
-                </div>
+                <div className="empty-state">Событий нет</div>
               ) : (
-                dayEvents.map((e) => (
-                  <EventCard
-                    key={e.id}
-                    event={e}
-                    onClick={() => {
-                      setEditing(e)
-                      setModalOpen(true)
-                    }}
-                  />
-                ))
+                dayEvents.map((e) => <EventCard key={e.id} event={e} onClick={() => openEvent(e)} />)
               )}
             </section>
           </>
@@ -276,23 +317,11 @@ export default function App() {
               onSelectDay={(d) => setSelectedDay(d)}
             />
             <section className="day-panel">
-              <h3>{capitalize(format(selectedDay, 'EEEE, d MMMM', { locale: ru }))}</h3>
+              <h3>{dayTitle}</h3>
               {dayEvents.length === 0 ? (
-                <div className="empty-state">
-                  <span className="emoji">🗓️</span>
-                  Нет событий в этот день
-                </div>
+                <div className="empty-state">Событий нет</div>
               ) : (
-                dayEvents.map((e) => (
-                  <EventCard
-                    key={e.id}
-                    event={e}
-                    onClick={() => {
-                      setEditing(e)
-                      setModalOpen(true)
-                    }}
-                  />
-                ))
+                dayEvents.map((e) => <EventCard key={e.id} event={e} onClick={() => openEvent(e)} />)
               )}
             </section>
           </>
@@ -300,38 +329,20 @@ export default function App() {
 
         {view === 'day' && (
           <section className="day-panel">
+            <h3>{dayTitle}</h3>
             {dayEvents.length === 0 ? (
-              <div className="empty-state">
-                <span className="emoji">☀️</span>
-                Свободный день — событий нет
-              </div>
+              <div className="empty-state">Событий нет</div>
             ) : (
-              dayEvents.map((e) => (
-                <EventCard
-                  key={e.id}
-                  event={e}
-                  onClick={() => {
-                    setEditing(e)
-                    setModalOpen(true)
-                  }}
-                />
-              ))
+              dayEvents.map((e) => <EventCard key={e.id} event={e} onClick={() => openEvent(e)} />)
             )}
 
             {upcoming.length > 0 && (
-              <>
-                <h3 style={{ marginTop: 24 }}>Ближайшие события</h3>
+              <section className="day-panel">
+                <h3>Ближайшие события</h3>
                 {upcoming.map((e) => (
-                  <EventCard
-                    key={e.id}
-                    event={e}
-                    onClick={() => {
-                      setEditing(e)
-                      setModalOpen(true)
-                    }}
-                  />
+                  <EventCard key={e.id} event={e} onClick={() => openEvent(e)} />
                 ))}
-              </>
+              </section>
             )}
           </section>
         )}
@@ -345,7 +356,8 @@ export default function App() {
           setModalOpen(true)
         }}
       >
-        +
+        <IconPlus size={16} />
+        Событие
       </button>
 
       {modalOpen && (
@@ -353,6 +365,7 @@ export default function App() {
           initialDay={selectedDay}
           editing={editing}
           canEdit={canEditSelected}
+          ownerLabel={viewingUser ? viewingUser.name : null}
           onSave={handleSave}
           onDelete={editing ? handleDelete : null}
           onClose={() => {
@@ -362,7 +375,28 @@ export default function App() {
         />
       )}
 
-      {teamOpen && <TeamModal onClose={() => setTeamOpen(false)} />}
+      {teamOpen && (
+        <TeamModal
+          currentUser={user}
+          onOpenCalendar={(u) => {
+            setViewingUser(u)
+            setTeamOpen(false)
+            setSelectedDay(new Date())
+          }}
+          onClose={() => setTeamOpen(false)}
+        />
+      )}
+
+      {profileOpen && (
+        <ProfileModal
+          user={user}
+          onUpdated={(u) => {
+            setUser(u)
+            showToast('Данные аккаунта обновлены')
+          }}
+          onClose={() => setProfileOpen(false)}
+        />
+      )}
 
       {toast && <div className="toast">{toast}</div>}
     </div>

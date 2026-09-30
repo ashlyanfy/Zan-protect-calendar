@@ -110,3 +110,36 @@ class UserOut(BaseModel):
 class TokenResponse(BaseModel):
     token: str
     user: UserOut
+
+
+class CredentialsUpdate(BaseModel):
+    """Смена собственных данных: требуется текущий пароль."""
+
+    current_password: str = Field(..., min_length=1, max_length=200)
+    login: str | None = Field(None, min_length=3, max_length=100)
+    name: str | None = Field(None, min_length=1, max_length=200)
+    password: str | None = Field(None, min_length=6, max_length=200)
+
+    @field_validator("login", "name")
+    @classmethod
+    def strip_optional(cls, v: str | None) -> str | None:
+        if v is None:
+            return None
+        v = v.strip()
+        return v or None
+
+
+class UserUpdate(BaseModel):
+    """Админ меняет данные сотрудника — текущий пароль не нужен."""
+
+    login: str | None = Field(None, min_length=3, max_length=100)
+    name: str | None = Field(None, min_length=1, max_length=200)
+    password: str | None = Field(None, min_length=6, max_length=200)
+
+    @field_validator("login", "name")
+    @classmethod
+    def strip_optional(cls, v: str | None) -> str | None:
+        if v is None:
+            return None
+        v = v.strip()
+        return v or None

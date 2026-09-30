@@ -63,6 +63,16 @@ export async function fetchMe(): Promise<User> {
   return request('/api/auth/me')
 }
 
+/** Смена собственных логина, имени и пароля. Возвращает новый токен. */
+export async function updateCredentials(payload: {
+  current_password: string
+  login?: string
+  name?: string
+  password?: string
+}): Promise<{ token: string; user: User }> {
+  return request('/api/auth/credentials', { method: 'PATCH', body: JSON.stringify(payload) })
+}
+
 // ---------- Сотрудники (только админ) ----------
 
 export async function fetchUsers(): Promise<User[]> {
@@ -73,22 +83,32 @@ export async function createUser(payload: { login: string; password: string; nam
   return request('/api/users', { method: 'POST', body: JSON.stringify(payload) })
 }
 
+export async function updateUser(
+  id: string,
+  payload: { login?: string; name?: string; password?: string },
+): Promise<User> {
+  return request(`/api/users/${id}`, { method: 'PATCH', body: JSON.stringify(payload) })
+}
+
 export async function deleteUser(id: string): Promise<void> {
   return request(`/api/users/${id}`, { method: 'DELETE' })
 }
 
 // ---------- События ----------
 
-export async function fetchEvents(start?: Date, end?: Date): Promise<CalendarEvent[]> {
+/** userId — чей календарь запрашиваем (доступно только администратору). */
+export async function fetchEvents(start?: Date, end?: Date, userId?: string | null): Promise<CalendarEvent[]> {
   const params = new URLSearchParams()
   if (start) params.set('start', start.toISOString())
   if (end) params.set('end', end.toISOString())
+  if (userId) params.set('user_id', userId)
   const qs = params.toString()
   return request(qs ? `/api/events?${qs}` : '/api/events')
 }
 
-export async function createEvent(payload: EventPayload): Promise<CalendarEvent> {
-  return request('/api/events', { method: 'POST', body: JSON.stringify(payload) })
+export async function createEvent(payload: EventPayload, userId?: string | null): Promise<CalendarEvent> {
+  const qs = userId ? `?user_id=${encodeURIComponent(userId)}` : ''
+  return request(`/api/events${qs}`, { method: 'POST', body: JSON.stringify(payload) })
 }
 
 export async function updateEvent(id: string, payload: EventPayload): Promise<CalendarEvent> {

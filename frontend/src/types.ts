@@ -38,11 +38,11 @@ export interface User {
 }
 
 export const EVENT_TYPE_META: Record<EventType, { label: string; color: string; bg: string }> = {
-  court: { label: 'Суд', color: '#b03a48', bg: '#fbe9eb' },
-  meeting: { label: 'Встреча', color: '#2f6bd8', bg: '#e7eefc' },
-  deadline: { label: 'Дедлайн', color: '#b06a1f', bg: '#fdf0df' },
-  consultation: { label: 'Консультация', color: '#22867a', bg: '#e3f4f1' },
-  other: { label: 'Другое', color: '#5b6478', bg: '#eceff5' },
+  court: { label: 'Суд', color: '#8e2b36', bg: '#f6ecec' },
+  meeting: { label: 'Встреча', color: '#1f4c86', bg: '#eaeff6' },
+  deadline: { label: 'Дедлайн', color: '#8a5512', bg: '#f7f1e7' },
+  consultation: { label: 'Консультация', color: '#1d6355', bg: '#e9f1ef' },
+  other: { label: 'Другое', color: '#4e5866', bg: '#eef0f3' },
 }
 
 export const REMINDER_OPTIONS: { value: number | null; label: string }[] = [

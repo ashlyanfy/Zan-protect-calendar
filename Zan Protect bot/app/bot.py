@@ -190,8 +190,7 @@ class Controller:
 
 async def run():
     cfg = settings()
-    if not cfg.telegram_bot_token or not cfg.openai_api_key or not cfg.data_encryption_key:
-        raise RuntimeError("Configure TELEGRAM_BOT_TOKEN, OPENAI_API_KEY, DATA_ENCRYPTION_KEY")
+    cfg.validate_bot()
     pool = await asyncpg.create_pool(cfg.database_url, min_size=1, max_size=10)
     store = PrivateStore(pool, cfg.data_encryption_key, cfg.session_ttl_seconds, cfg.max_queue_jobs)
     assistant = Assistant(cfg, pool)

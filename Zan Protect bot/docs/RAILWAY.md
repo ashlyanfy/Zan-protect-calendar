@@ -47,7 +47,7 @@ Bot использует long polling — публичный домен и webho
 | `TELEGRAM_BOT_TOKEN` | Токен вашего бота из BotFather |
 | `OPENAI_API_KEY` | Ваш API-ключ |
 | `OPENAI_MODEL` | Доступная вашему API-проекту модель, проверенная на сценариях бота |
-| `REASONING_EFFORT` | `high` при поддержке выбранной моделью |
+| `REASONING_EFFORT` | `medium` для `gpt-6-sol` |
 | `API_SECRET` | Случайный секрет не короче 32 символов |
 | `SESSION_SECRET` | Другой случайный секрет не короче 32 символов |
 | `ENABLE_WEB_SEARCH` | `false` для первого smoke-теста; затем `true` после проверки модели и политики обработки |

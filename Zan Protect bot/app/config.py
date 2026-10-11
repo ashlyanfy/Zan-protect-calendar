@@ -10,8 +10,8 @@ ROOT = Path(__file__).resolve().parent.parent
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=ROOT / ".env", extra="ignore")
     openai_api_key: str = ""
-    openai_model: str = "gpt-6-astra"
-    reasoning_effort: str = "high"
+    openai_model: str = "gpt-6-sol"
+    reasoning_effort: str = "medium"
     telegram_bot_token: str = ""
     database_url: str = "postgresql://zan:change-local-password@localhost:5432/zan"
     api_secret: str = Field(min_length=32)

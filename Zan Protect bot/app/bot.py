@@ -10,6 +10,7 @@ import asyncpg
 from aiogram import Bot
 from aiogram.types import BufferedInputFile, KeyboardButton, Message, ReplyKeyboardMarkup, Update
 
+from app.audio import audio_attachment
 from app.cases import Case
 from app.config import settings
 from app.documents import TITLES, build_draft, export
@@ -33,13 +34,16 @@ def keyboard(rows):
 MENU = keyboard([["Проверь / Тексер", "Уже случилось / Болып қойды"], ["Русский", "Қазақша"],
                  ["Согласен / Келісемін", "Юрист / Заңгер"]])
 HELP_MENU = keyboard([[x] for x in BRANCH_BUTTONS])
+AUDIO_CONSENT = "Разрешить аудио / Аудиоға келісемін"
 NOTICE = (
     "Zan Protect — помощь по мошенничеству в Казахстане. Текст и изображения обрабатываются внешним ИИ. "
+    "Для расшифровки аудио отдельно запрашивается согласие на отправку записи внешнему ИИ. "
     "Не отправляйте пароли, коды, ИИН и номера карт. Скройте личные данные на изображениях. "
     "Зашифрованная сессия хранится до 30 минут; /delete отменяет обработку и удаляет активные данные. "
     "Это не удаляет историю Telegram, данные провайдера и ранее созданные резервные копии. "
     "Для обработки нажмите «Согласен / Келісемін».\n\n"
     "Қазақстандағы алаяқтық бойынша көмек. Мәтін мен суреттер сыртқы ЖИ сервисіне жіберіледі. "
+    "Аудионы сыртқы ЖИ арқылы мәтінге айналдыруға бөлек келісім сұралады. "
     "Құпиясөз, код, ЖСН және карта нөмірін жібермеңіз. Жеке деректерді алдын ала жабыңыз. "
     "Шифрланған сессия 30 минутқа дейін сақталады. /delete белсенді деректерді жояды; Telegram, "
     "провайдер және бұрынғы сақтық көшірмелердегі деректерді жоймайды. Өңдеу үшін «Келісемін» таңдаңыз."
@@ -53,6 +57,8 @@ HELP_TEXT = (
     "/check — проверка / тексеру\n/help_mode — помощь / көмек\n"
     "/confirm — подтвердить анкету / сауалнаманы растау\n/skip — неизвестно / белгісіз\n"
     "/reset — новая анкета / жаңа сауалнама\n/analyze — анализ анкеты / сауалнаманы талдау\n"
+    "/stop — остановить анкету / сауалнаманы тоқтату\n/resume — продолжить анкету / жалғастыру\n"
+    "/audio_off — отключить расшифровку / аудионы өңдеуді өшіру\n"
     "/document police pdf — заявление / арыз\n"
     "Виды / Түрлері: police, bank_dispute, bank_loan, regulator, block_reason, restructure, evidence\n"
     "Форматы / Пішімдер: pdf, docx, txt\n/web_on, /web_off — поиск / іздеу\n/delete — удалить / жою")
@@ -97,6 +103,12 @@ class Controller:
         if text == "/help":
             await send(HELP_TEXT, MENU)
             return
+        if text in {AUDIO_CONSENT, "/audio_off"}:
+            s.audio_consent = text == AUDIO_CONSENT
+            await save()
+            await send(("Аудионы жіберіңіз." if kk else "Отправьте аудиозапись.") if s.audio_consent else
+                       ("Аудионы өңдеу өшірілді." if kk else "Расшифровка аудио отключена."), MENU)
+            return
         if text in {"/web_on", "/web_off"}:
             s.web_consent = text == "/web_on"
             await save()
@@ -110,6 +122,7 @@ class Controller:
         if text in {"Проверь / Тексер", "/check", "Уже случилось / Болып қойды", "/help_mode", "/reset"}:
             s.mode = "check" if text in {"Проверь / Тексер", "/check"} else "help"
             s.case, s.history = {}, []
+            s.case_paused = False
             await save()
             await send(("Хабарлама не файл жіберіңіз." if kk else "Пришлите сообщение или файл.") if s.mode == "check" else URGENT[kk],
                        MENU if s.mode == "check" else HELP_MENU)
@@ -117,11 +130,29 @@ class Controller:
         if text in BRANCH_BUTTONS:
             case = Case(branch=BRANCH_BUTTONS[text])
             s.mode, s.case, s.history = "help", case.model_dump(), []
+            s.case_paused = False
             await save()
             await send(case.question(s.language), MENU)
             return
         case = Case.model_validate(s.case or {})
+        if text == "/stop":
+            s.case_paused = True
+            await save()
+            await send("Сауалнама тоқтатылды." if kk else "Анкета остановлена. Можете описать другую ситуацию.")
+            return
+        if text == "/resume":
+            if not case.branch:
+                await send("Алдымен жағдайды таңдаңыз." if kk else "Сохранённой анкеты нет. Выберите ситуацию.", HELP_MENU)
+                return
+            s.case_paused, s.history = False, []
+            await save()
+            await send(case.question(s.language) or case.summary(s.language))
+            return
         if text == "/confirm":
+            if s.case_paused or case.next_field() or not case.branch:
+                await send("Сауалнама дайын емес. /resume — жалғастыру." if kk else
+                           "Анкета не завершена или приостановлена. /resume — продолжить.")
+                return
             case.confirm()
             s.case = case.model_dump()
             await save()
@@ -131,7 +162,7 @@ class Controller:
         if text.startswith("/document"):
             parts = text.split()
             kind, fmt = (parts[1] if len(parts) > 1 else "police"), (parts[2] if len(parts) > 2 else "pdf")
-            if not case.confirmed:
+            if not case.confirmed or s.case_paused:
                 await send("Сауалнаманы толтырып, /confirm жіберіңіз." if kk else "Заполните анкету в режиме помощи и подтвердите /confirm.", HELP_MENU)
                 return
             if kind not in TITLES or fmt not in {"pdf", "docx", "txt"}:
@@ -142,8 +173,8 @@ class Controller:
                 await message.answer_document(BufferedInputFile(data, filename=f"zan-{kind}.{fmt}"),
                     caption="Жоба. Жібермес бұрын тексеріңіз." if kk else "Черновик. Проверьте факты и заполните поля перед подачей.")
             return
-        if case.next_field() and (text == "/skip" or (message.text and not text.startswith("/"))):
-            case.record(("Белгісіз" if kk else "Неизвестно") if text == "/skip" else redact(text))
+        if case.next_field() and not s.case_paused and text == "/skip":
+            case.record("Белгісіз" if kk else "Неизвестно")
             s.case = case.model_dump()
             await save()
             await send(case.question(s.language) or case.summary(s.language) +
@@ -151,7 +182,7 @@ class Controller:
                         "\n\n/confirm — подтвердить; /reset — заполнить заново"))
             return
         if text == "/analyze":
-            if not case.confirmed:
+            if not case.confirmed or s.case_paused:
                 await send("Алдымен /confirm." if kk else "Сначала подтвердите анкету: /confirm.")
                 return
             text = case.summary(s.language)
@@ -162,7 +193,27 @@ class Controller:
             await send("Бүгінгі сұраулар шегіне жеттіңіз." if kk else "Достигнут дневной лимит анализа. Попробуйте завтра.")
             return
         image = None
-        file = message.document or (message.photo[-1] if message.photo else None)
+        audio = audio_attachment(message)
+        if audio:
+            if not s.audio_consent:
+                await send("Жазба сыртқы ЖИ сервисіне жіберіледі. Келіссеңіз, түймені басып, аудионы қайта жіберіңіз."
+                           if kk else "Для расшифровки запись будет отправлена внешнему ИИ. "
+                           "Если согласны, нажмите кнопку и отправьте аудио повторно.", keyboard([[AUDIO_CONSENT]]))
+                return
+            recording, filename = audio
+            if (recording.file_size is None or recording.file_size > self.cfg.max_file_bytes or
+                    getattr(recording, "duration", 0) > self.cfg.max_audio_seconds):
+                await send("Аудио тым үлкен не ұзақ. Қысқа үзінді жіберіңіз." if kk else
+                           "Запись слишком большая или длинная. Отправьте короткий фрагмент: до 5 минут и 10 МБ.")
+                return
+            output = io.BytesIO()
+            await self.bot.download(recording.file_id, destination=output, timeout=30)
+            await send("Аудио мәтінге айналдырылуда." if kk else "Расшифровываю аудиозапись.")
+            transcript = await self.assistant.transcribe(filename, output.getvalue())
+            text += "\n" + transcript
+            await send(("Танылған мәтін. Қате болса, түзетіңіз:\n" if kk else
+                        "Распознанный текст. Если есть ошибки, уточните их:\n") + transcript)
+        file = None if audio else message.document or (message.photo[-1] if message.photo else None)
         if file:
             if file.file_size is None or file.file_size > self.cfg.max_file_bytes:
                 raise ValueError("File size")
@@ -174,8 +225,41 @@ class Controller:
             await send("Мәтінде қате болуы мүмкін. Сома мен күндерді растаңыз." if kk else
                        "В извлечённом тексте возможны ошибки. Суммы и даты подтвердите в анкете перед документом.")
         if not text.strip() and not image:
-            await send("Мәтін, PDF, DOCX, PPTX, XLSX не сурет жіберіңіз." if kk else "Отправьте текст, PDF, DOCX, PPTX, XLSX или изображение.")
+            await send("Мәтін, құжат, сурет не аудио жіберіңіз." if kk else "Отправьте текст, документ, изображение или аудиозапись.")
             return
+        if len(text) > self.cfg.max_input_chars:
+            await send("Қысқа үзінді жіберіңіз." if kk else "Сообщение слишком длинное. Отправьте короткий фрагмент.")
+            return
+        if message.text != "/analyze":
+            turn = await self.assistant.dialogue(text, s.language, case.model_dump(), s.case_paused,
+                                                case.question(s.language), s.history, image)
+            if turn.action == "answer" and case.next_field() and not s.case_paused and not image:
+                if len(text) > 3000:
+                    await send("Жауапты қысқартыңыз." if kk else "Сократите ответ для анкеты до 3000 символов.")
+                    return
+                case.record(redact(text))
+                s.case = case.model_dump()
+                await save()
+                await send(case.question(s.language) or case.summary(s.language) +
+                           ("\n/confirm — растау" if kk else "\n/confirm — подтвердить; /reset — заполнить заново"))
+                return
+            if turn.action in {"pause", "off_topic", "clarify"}:
+                if turn.action != "clarify":
+                    s.case_paused = True
+                reply = turn.reply.strip() or ("Нақтылап жазыңыз." if kk else "Уточните, с чем нужна помощь.")
+                s.history = (s.history + [redact(text), "[Assistant] " + reply])[-8:]
+                await save()
+                await send(reply)
+                return
+            if turn.action == "new_topic":
+                s.history = []
+                s.mode = "help"
+            elif case.branch and not s.case_paused:
+                s.history = [case.summary(s.language)]
+            if case.branch:
+                s.case_paused = True
+            # Persist the pause before analysis; an LLM failure must not resume the old questionnaire.
+            await save()
         combined = "\n".join(s.history + [redact(text)])
         if len(combined) > self.cfg.max_input_chars:
             await send("Мәтін тым ұзақ. /reset не қысқа үзінді жіберіңіз." if kk else "Текст слишком длинный. Начните /reset или отправьте короткий фрагмент.")
@@ -230,6 +314,8 @@ async def run():
             "from": {"id": message.from_user.id, "is_bot": False, "first_name": "User"},
             "text": message.text, "caption": message.caption,
             "document": message.document.model_dump(mode="json") if message.document else None,
+            "voice": message.voice.model_dump(mode="json") if message.voice else None,
+            "audio": message.audio.model_dump(mode="json") if message.audio else None,
             "photo": [p.model_dump(mode="json") for p in message.photo] if message.photo else None}}
         if not await store.enqueue(event_update.update_id, key, payload):
             await message.answer("Очередь заполнена. Попробуйте позже.\nКезек толы. Кейінірек көріңіз.")

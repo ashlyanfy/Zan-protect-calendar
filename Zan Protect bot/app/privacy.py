@@ -27,6 +27,8 @@ class Session:
     language: str = "ru"
     consent: bool = False
     web_consent: bool = False
+    audio_consent: bool = False
+    case_paused: bool = False
     history: list[str] = field(default_factory=list)
     busy: bool = False
     last_request: float = 0

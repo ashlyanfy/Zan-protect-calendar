@@ -8,7 +8,7 @@ from openai import AsyncOpenAI, OpenAIError
 from app.config import ROOT, Settings
 from app.privacy import redact
 from app.retrieval import retrieve
-from app.schemas import Answer, Draft, Intake, Source
+from app.schemas import Answer, DialogueTurn, Draft, Intake, Source
 from app.verification import verify
 
 DOMAINS = ["adilet.zan.kz", "gov.kz", "egov.kz", "nationalbank.kz"]
@@ -52,6 +52,32 @@ class Assistant:
         self.config = config
         self.pool = pool
         self.client = AsyncOpenAI(api_key=config.openai_api_key or "unconfigured", timeout=90, max_retries=1)
+
+    async def dialogue(self, text: str, language: str, case: dict, paused: bool,
+                       question: str | None, history: list[str], image: str | None = None) -> DialogueTurn:
+        return await self.structured("dialogue", {
+            "language": language, "case": {} if paused else case, "paused": paused,
+            "pending_question": None if paused else question,
+            "recent_history": history[-4:], "latest_message": redact(text),
+        }, DialogueTurn, image)
+
+    async def transcribe(self, name: str, data: bytes) -> str:
+        from pathlib import Path
+
+        from app.audio import AUDIO_FORMATS
+
+        suffix = Path(name).suffix.lower()
+        if suffix not in AUDIO_FORMATS or not data or len(data) > self.config.max_file_bytes:
+            raise ValueError("Unsupported or oversized audio")
+        # Generic filename avoids transmitting personal details from an uploaded filename.
+        result = await self.client.audio.transcriptions.create(
+            model=self.config.transcription_model, file=("recording" + suffix, data, AUDIO_FORMATS[suffix]),
+            response_format="json", timeout=60,
+        )
+        text = result.text.strip()
+        if not text or len(text) > self.config.max_input_chars:
+            raise ValueError("Empty or oversized transcript")
+        return redact(text)
 
     async def structured(self, name: str, payload: dict, schema, image: str | None = None):
         if not self.config.openai_api_key:

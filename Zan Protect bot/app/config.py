@@ -13,6 +13,8 @@ class Settings(BaseSettings):
     openai_api_key: str = ""
     openai_model: str = "gpt-6-sol"
     reasoning_effort: str = "medium"
+    transcription_model: str = "gpt-4o-transcribe"
+    max_audio_seconds: int = Field(default=300, ge=1, le=600)
     telegram_bot_token: str = ""
     database_url: str = "postgresql://zan:change-local-password@localhost:5432/zan"
     api_secret: str = Field(min_length=32)

@@ -17,6 +17,11 @@ class Intake(StrictModel):
     questions: list[str]
 
 
+class DialogueTurn(StrictModel):
+    action: Literal["answer", "clarify", "pause", "off_topic", "new_topic", "analyze"]
+    reply: str = Field(max_length=1200)
+
+
 class Source(StrictModel):
     id: str
     title: str

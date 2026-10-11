@@ -35,14 +35,18 @@ async def apply(conn, directory: Path = SQL_DIR):
                                path.name, checksum)
 
 
-async def main():
-    load_dotenv(SQL_DIR.parent / ".env")
-    conn = await asyncpg.connect(os.environ["DATABASE_URL"], timeout=30, command_timeout=120)
+async def migrate_database(database_url: str):
+    conn = await asyncpg.connect(database_url, timeout=30, command_timeout=120)
     try:
         await apply(conn)
-        print("Database migrations completed")
+        print("Database migrations completed", flush=True)
     finally:
         await conn.close()
+
+
+async def main():
+    load_dotenv(SQL_DIR.parent / ".env")
+    await migrate_database(os.environ["DATABASE_URL"])
 
 
 if __name__ == "__main__":

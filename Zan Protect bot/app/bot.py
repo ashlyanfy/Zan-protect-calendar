@@ -18,6 +18,7 @@ from app.llm import Assistant
 from app.privacy import redact, session_key
 from app.render import render
 from app.storage import PrivateStore
+from scripts.migrate import migrate_database
 
 log = logging.getLogger("zan.runtime")
 BRANCH_BUTTONS = {"Деньги ушли / Ақша кетті": "money", "Чужой кредит / Бөтен несие": "loan",
@@ -191,6 +192,7 @@ class Controller:
 async def run():
     cfg = settings()
     cfg.validate_bot()
+    await migrate_database(cfg.database_url)
     pool = await asyncpg.create_pool(cfg.database_url, min_size=1, max_size=10)
     store = PrivateStore(pool, cfg.data_encryption_key, cfg.session_ttl_seconds, cfg.max_queue_jobs)
     assistant = Assistant(cfg, pool)
@@ -268,9 +270,13 @@ async def run():
     async def poll():
         # Advance Telegram offset only after durable enqueue succeeds.
         offset = None
+        connected = False
         while True:
             try:
                 updates = await bot.get_updates(offset=offset, timeout=30, allowed_updates=["message"])
+                if not connected:
+                    print("Telegram polling connected", flush=True)
+                    connected = True
                 for update in updates:
                     if update.message:
                         await incoming(update.message, update)

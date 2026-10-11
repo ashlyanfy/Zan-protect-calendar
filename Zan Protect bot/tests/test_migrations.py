@@ -7,6 +7,38 @@ import pytest
 from scripts.migrate import apply
 
 
+async def test_database_connection_closed_on_migration_failure(monkeypatch):
+    from scripts import migrate
+    conn = AsyncMock()
+    monkeypatch.setattr(migrate.asyncpg, "connect", AsyncMock(return_value=conn))
+    monkeypatch.setattr(migrate, "apply", AsyncMock(side_effect=RuntimeError("migration failed")))
+    with pytest.raises(RuntimeError, match="migration failed"):
+        await migrate.migrate_database("postgresql://test")
+    conn.close.assert_awaited_once()
+
+
+async def test_bot_migrates_before_opening_pool(monkeypatch):
+    from types import SimpleNamespace
+    from unittest.mock import Mock
+
+    from app import bot
+    order = []
+
+    async def migration(url):
+        order.append("migrate")
+
+    async def create_pool(*args, **kwargs):
+        order.append("pool")
+        raise RuntimeError("stop before network")
+
+    monkeypatch.setattr(bot, "settings", lambda: SimpleNamespace(validate_bot=Mock(), database_url="test"))
+    monkeypatch.setattr(bot, "migrate_database", migration)
+    monkeypatch.setattr(bot.asyncpg, "create_pool", create_pool)
+    with pytest.raises(RuntimeError, match="stop before network"):
+        await bot.run()
+    assert order == ["migrate", "pool"]
+
+
 class Connection:
     def __init__(self, previous=None):
         self.execute = AsyncMock()

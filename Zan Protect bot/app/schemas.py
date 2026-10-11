@@ -9,7 +9,7 @@ class StrictModel(BaseModel):
 
 class Intake(StrictModel):
     language: Literal["ru", "kk"]
-    situation: Literal["check", "money", "loan", "credentials", "blocked", "dropper", "other"]
+    situation: Literal["check", "money", "loan", "credentials", "blocked", "dropper", "blackmail", "other"]
     summary: str
     indicators: list[str]
     risk_floor: Literal["unknown", "low", "medium", "high"]

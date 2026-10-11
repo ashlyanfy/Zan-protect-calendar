@@ -26,4 +26,4 @@ def render(answer: Answer, sources: list[Source]) -> str:
         blocks.append("Заңгердің жеке кеңесі қажет." if kk else "Нужна индивидуальная консультация юриста.")
     blocks.append("Ақпараттық көмек. Нәтижеге кепілдік берілмейді." if kk else
                   "Информационная помощь. Результат обращения не гарантирован.")
-    return "\n\n".join(blocks)
+    return "\n\n".join(block for block in blocks if block.strip())

@@ -158,10 +158,9 @@ class Assistant:
             "sources": [s.model_dump() for s in sources], "research_unavailable": research_failed,
             "rule": "No legal claims without sources. Missing cards do not imply low risk.",
         }, Answer)
-        result = validate_answer(result, intake, sources)
         if self.config.verify_answers:
-            result = await verify(self, result, sources, cleaned + "\n" + intake.summary)
-            result = validate_answer(result, intake, sources)
+            result = await verify(self, result, sources, cleaned, intake.situation)
+        result = validate_answer(result, intake, sources)
         return result, sources
 
     async def document(self, kind: str, facts: str, language: str) -> Draft:

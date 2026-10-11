@@ -1,0 +1,85 @@
+{
+  "type": "array",
+  "items": {
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "pattern": "^[a-z0-9_-]{3,100}$",
+        "title": "Id",
+        "type": "string"
+      },
+      "title": {
+        "maxLength": 300,
+        "minLength": 5,
+        "title": "Title",
+        "type": "string"
+      },
+      "url": {
+        "maxLength": 2000,
+        "title": "Url",
+        "type": "string"
+      },
+      "language": {
+        "enum": [
+          "ru",
+          "kk"
+        ],
+        "title": "Language",
+        "type": "string"
+      },
+      "excerpt": {
+        "maxLength": 12000,
+        "minLength": 60,
+        "title": "Excerpt",
+        "type": "string"
+      },
+      "checked_on": {
+        "format": "date",
+        "title": "Checked On",
+        "type": "string"
+      },
+      "review_due": {
+        "format": "date",
+        "title": "Review Due",
+        "type": "string"
+      },
+      "effective_from": {
+        "anyOf": [
+          {
+            "format": "date",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Effective From"
+      },
+      "effective_to": {
+        "anyOf": [
+          {
+            "format": "date",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Effective To"
+      }
+    },
+    "required": [
+      "id",
+      "title",
+      "url",
+      "language",
+      "excerpt",
+      "checked_on",
+      "review_due"
+    ],
+    "title": "LegalMaterial",
+    "type": "object"
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "type": "array",
+  "items": {
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "pattern": "^[a-z0-9_-]{3,100}$",
+        "title": "Id",
+        "type": "string"
+      },
+      "category": {
+        "enum": [
+          "impersonation",
+          "relative_emergency",
+          "dropper_recruitment",
+          "p2p_dirty_transfer",
+          "investment",
+          "marketplace",
+          "account_takeover",
+          "phishing",
+          "fraudulent_loan",
+          "romance_extortion",
+          "fake_benefit",
+          "fake_lottery"
+        ],
+        "title": "Category",
+        "type": "string"
+      },
+      "title_ru": {
+        "maxLength": 200,
+        "minLength": 5,
+        "title": "Title Ru",
+        "type": "string"
+      },
+      "title_kk": {
+        "maxLength": 200,
+        "minLength": 5,
+        "title": "Title Kk",
+        "type": "string"
+      },
+      "risk": {
+        "enum": [
+          "high",
+          "medium",
+          "low",
+          "unknown"
+        ],
+        "title": "Risk",
+        "type": "string"
+      },
+      "signs": {
+        "items": {
+          "type": "string"
+        },
+        "maxItems": 50,
+        "minItems": 1,
+        "title": "Signs",
+        "type": "array"
+      },
+      "steps": {
+        "items": {
+          "type": "string"
+        },
+        "maxItems": 20,
+        "minItems": 1,
+        "title": "Steps",
+        "type": "array"
+      },
+      "victim_risks": {
+        "items": {
+          "type": "string"
+        },
+        "maxItems": 20,
+        "minItems": 1,
+        "title": "Victim Risks",
+        "type": "array"
+      },
+      "aftercare": {
+        "items": {
+          "type": "string"
+        },
+        "maxItems": 20,
+        "minItems": 1,
+        "title": "Aftercare",
+        "type": "array"
+      },
+      "participant_liability": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Participant Liability"
+      },
+      "legal_source_ids": {
+        "items": {
+          "type": "string"
+        },
+        "maxItems": 30,
+        "title": "Legal Source Ids",
+        "type": "array"
+      },
+      "variations_ru": {
+        "items": {
+          "type": "string"
+        },
+        "maxItems": 30,
+        "minItems": 1,
+        "title": "Variations Ru",
+        "type": "array"
+      },
+      "variations_kk": {
+        "items": {
+          "type": "string"
+        },
+        "maxItems": 30,
+        "minItems": 1,
+        "title": "Variations Kk",
+        "type": "array"
+      },
+      "synthetic": {
+        "title": "Synthetic",
+        "type": "boolean"
+      },
+      "provenance": {
+        "maxLength": 2000,
+        "minLength": 10,
+        "title": "Provenance",
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "category",
+      "title_ru",
+      "title_kk",
+      "risk",
+      "signs",
+      "steps",
+      "victim_risks",
+      "aftercare",
+      "variations_ru",
+      "variations_kk",
+      "synthetic",
+      "provenance"
+    ],
+    "title": "SchemeMaterial",
+    "type": "object"
+  }
+}

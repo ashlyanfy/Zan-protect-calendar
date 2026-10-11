@@ -1,0 +1,12 @@
+[
+  {"id":"criminal-code","purpose":"Действующие нормы об ответственности; проверять применимость и редакцию","url":"https://old.adilet.zan.kz/rus/docs/K1400000226","type":"law","status":"candidate"},
+  {"id":"payments-law","purpose":"Платежи, операции и антифрод","url":"https://old.adilet.zan.kz/rus/docs/Z1600000011","type":"law","status":"candidate"},
+  {"id":"antifraud-rules","purpose":"Правила работы Антифрод-центра и участников","url":"https://old.adilet.zan.kz/rus/docs/V2500036742","type":"law","status":"candidate"},
+  {"id":"personal-data","purpose":"Согласие, хранение, передача и защита данных","url":"https://old.adilet.zan.kz/rus/docs/Z1300000094","type":"law","status":"candidate"},
+  {"id":"fraud-loan-guidance","purpose":"Официальная памятка о спорном кредите","url":"https://www.gov.kz/memleket/entities/ardfm/press/news/details/1076892?lang=ru","type":"regulator_guidance","status":"candidate"},
+  {"id":"antifraud-questions","purpose":"Уточнение оснований ограничений и порядка обращения","url":"https://nationalbank.kz/ru/gb/vopros-otvet","type":"regulator_guidance","status":"candidate"},
+  {"id":"stop-credit-service","purpose":"Добровольный отказ от новых займов","url":"https://www.gov.kz/services/5162?lang=ru","type":"service_instructions","status":"candidate"},
+  {"id":"fake-state-programs","purpose":"Признаки лжегоспрограмм","url":"https://www.gov.kz/memleket/entities/ardfm/press/news/details/1202058?lang=ru","type":"scheme_warning","status":"candidate"},
+  {"id":"police-cybercrime","purpose":"Официальные предупреждения о схемах","url":"https://www.gov.kz/memleket/entities/mvd-astana/activities/25086","type":"scheme_warning","status":"candidate"},
+  {"id":"kaspi-security","purpose":"Признаки поддельных ссылок и обращений от имени банка","url":"https://guide.kaspi.kz/client/ru/pay/security/q15362","type":"bank_warning","status":"candidate"}
+]

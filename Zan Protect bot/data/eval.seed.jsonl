@@ -1,0 +1,6 @@
+{"id":"dropper-ru","family":"dropper","text":"Работа: принимать чужие переводы на свою карту и отправлять дальше. 15000 тенге в день.","language":"ru","mode":"check","allowed_risks":["high"],"synthetic":true}
+{"id":"dropper-kk","family":"dropper","text":"Картаңызға басқа адамдардың ақшасын қабылдап, әрі қарай жіберіңіз. Күніне 15000 теңге.","language":"kk","mode":"check","allowed_risks":["high"],"synthetic":true}
+{"id":"code-ru","family":"bank-code","text":"Звонящий назвался банком и просит SMS-код, чтобы спасти деньги.","language":"ru","mode":"check","allowed_risks":["high"],"synthetic":true}
+{"id":"blocked-ru","family":"blocked","text":"После P2P банк ограничил счёт. Причину не знаю. Что делать?","language":"ru","mode":"help","allowed_risks":["unknown","medium","high"],"synthetic":true}
+{"id":"benign-job","family":"benign-work","text":"Предлагают обычную работу бухгалтером с трудовым договором. Просят резюме. Никаких переводов через мою карту не требуется.","language":"ru","mode":"check","allowed_risks":["low","unknown","medium"],"synthetic":true}
+{"id":"unknown-kk","family":"unknown","text":"Осы ұсыныс қауіпсіз бе? Әзірге мәтіні жоқ.","language":"kk","mode":"check","allowed_risks":["unknown"],"synthetic":true}

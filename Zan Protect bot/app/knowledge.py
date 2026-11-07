@@ -1,4 +1,5 @@
 import hashlib
+import logging
 import math
 from datetime import date
 from typing import Literal
@@ -7,6 +8,9 @@ from urllib.parse import urlparse
 from pydantic import Field, model_validator
 
 from app.schemas import StrictModel
+
+log = logging.getLogger("zan.knowledge")
+EMBED_CHARS = 6000  # Keep embedding input within model token limits; hashes still cover the full text.
 
 
 class LegalMaterial(StrictModel):
@@ -135,8 +139,12 @@ async def index_knowledge(pool, client, config) -> int:
         """, row["kind"], row["item_id"], digest, config.embedding_model, config.embedding_dimensions)
         if exists:
             continue
-        response = await client.embeddings.create(model=config.embedding_model, dimensions=config.embedding_dimensions,
-                                                  input=text, encoding_format="float")
+        try:
+            response = await client.embeddings.create(model=config.embedding_model, dimensions=config.embedding_dimensions,
+                                                      input=text[:EMBED_CHARS], encoding_format="float")
+        except Exception as exc:  # noqa: BLE001 -- one bad item must not block indexing the rest
+            log.warning("index_item_failed kind=%s id=%s type=%s", row["kind"], row["item_id"], type(exc).__name__)
+            continue
         vector = response.data[0].embedding
         await pool.execute("""
             INSERT INTO knowledge_embeddings(kind,item_id,model,dimensions,content_hash,embedding) VALUES($1,$2,$3,$4,$5,$6)

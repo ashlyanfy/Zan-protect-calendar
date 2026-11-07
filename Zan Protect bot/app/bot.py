@@ -17,7 +17,7 @@ from app.config import settings
 from app.documents import TITLES, build_draft, export
 from app.files import extract
 from app.llm import Assistant
-from app.privacy import redact, session_key
+from app.privacy import redact, session_key, trim_history
 from app.render import render
 from app.storage import PrivateStore
 from scripts.migrate import migrate_database
@@ -40,13 +40,15 @@ NOTICE = (
     "Zan Protect — помощь по мошенничеству в Казахстане. Текст и изображения обрабатываются внешним ИИ. "
     "Для расшифровки аудио отдельно запрашивается согласие на отправку записи внешнему ИИ. "
     "Не отправляйте пароли, коды, ИИН и номера карт. Скройте личные данные на изображениях. "
-    "Зашифрованная сессия хранится до 30 минут; /delete отменяет обработку и удаляет активные данные. "
+    "Зашифрованная сессия хранится до 30 минут после последнего сообщения; затем бот удаляет историю, "
+    "забывает диалог и начинает заново. /delete отменяет обработку и удаляет активные данные. "
     "Это не удаляет историю Telegram, данные провайдера и ранее созданные резервные копии. "
     "Для обработки нажмите «Согласен / Келісемін».\n\n"
     "Қазақстандағы алаяқтық бойынша көмек. Мәтін мен суреттер сыртқы ЖИ сервисіне жіберіледі. "
     "Аудионы сыртқы ЖИ арқылы мәтінге айналдыруға бөлек келісім сұралады. "
     "Құпиясөз, код, ЖСН және карта нөмірін жібермеңіз. Жеке деректерді алдын ала жабыңыз. "
-    "Шифрланған сессия 30 минутқа дейін сақталады. /delete белсенді деректерді жояды; Telegram, "
+    "Шифрланған сессия соңғы хабарламадан кейін 30 минутқа дейін сақталады; одан соң бот тарихты өшіріп, "
+    "диалогты жаңадан бастайды. /delete белсенді деректерді жояды; Telegram, "
     "провайдер және бұрынғы сақтық көшірмелердегі деректерді жоймайды. Өңдеу үшін «Келісемін» таңдаңыз."
 )
 URGENT = (
@@ -73,6 +75,8 @@ class Controller:
         update = Update.model_validate(self.store.open(row["payload"]), context={"bot": self.bot})
         message = update.message
         s = await self.store.get(row["session_id"])
+        # Sliding window: an active conversation keeps its memory for TTL after the LAST message.
+        s.expires = max(s.expires, time.time() + self.cfg.session_ttl_seconds)
         text = message.text or message.caption or ""
         kk = s.language == "kk"
 
@@ -249,7 +253,7 @@ class Controller:
                 if turn.action != "clarify":
                     s.case_paused = True
                 reply = turn.reply.strip() or ("Нақтылап жазыңыз." if kk else "Уточните, с чем нужна помощь.")
-                s.history = (s.history + [redact(text), "[Assistant] " + reply])[-8:]
+                s.history = trim_history(s.history + [redact(text), "[Assistant] " + reply], 16000)
                 await save()
                 await send(reply)
                 return
@@ -262,15 +266,14 @@ class Controller:
                 s.case_paused = True
             # Persist the pause before analysis; an LLM failure must not resume the old questionnaire.
             await save()
-        combined = "\n".join(s.history + [redact(text)])
-        if len(combined) > self.cfg.max_input_chars:
-            await send("Мәтін тым ұзақ. /reset не қысқа үзінді жіберіңіз." if kk else "Текст слишком длинный. Начните /reset или отправьте короткий фрагмент.")
-            return
+        latest = redact(text)
+        combined = "\n".join(trim_history(s.history, max(self.cfg.max_input_chars - len(latest) - 1, 0)) + [latest])
         await send("Белгілер мен дереккөздер тексерілуде." if kk else "Проверяю признаки и источники.")
         answer, sources = await self.assistant.analyze(combined, s.mode, s.language, s.web_consent, image)
         s.history.append(redact(text) + ("\n" + redact(answer.summary) if image else ""))
         if answer.questions:
             s.history.append("[Assistant questions] " + " / ".join(answer.questions))
+        s.history = trim_history(s.history, 16000)
         await save()
         await send(render(answer, sources))
 

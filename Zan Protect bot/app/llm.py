@@ -59,7 +59,7 @@ class Assistant:
         return await self.structured("dialogue", {
             "language": language, "case": {} if paused else case, "paused": paused,
             "pending_question": None if paused else question,
-            "recent_history": history[-4:], "latest_message": redact(text),
+            "recent_history": history[-8:], "latest_message": redact(text),
         }, DialogueTurn, image)
 
     async def transcribe(self, name: str, data: bytes) -> str:

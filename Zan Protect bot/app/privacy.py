@@ -16,6 +16,17 @@ def redact(text: str) -> str:
     return text
 
 
+def trim_history(history: list[str], budget: int, max_items: int = 24) -> list[str]:
+    """Keep the newest entries within a character budget; never drop the latest entry."""
+    kept, total = [], 0
+    for item in reversed(history[-max_items:]):
+        total += len(item) + 1
+        if total > budget and kept:
+            break
+        kept.append(item)
+    return list(reversed(kept))
+
+
 def session_key(user_id: int, secret: str) -> str:
     return hmac.new(secret.encode(), str(user_id).encode(), hashlib.sha256).hexdigest()
 

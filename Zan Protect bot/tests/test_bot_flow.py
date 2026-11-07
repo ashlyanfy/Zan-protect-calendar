@@ -26,7 +26,8 @@ def setup(text, session):
     assistant = SimpleNamespace(analyze=AsyncMock(), dialogue=AsyncMock(
         return_value=DialogueTurn(action="answer", reply="")), transcribe=AsyncMock())
     config = SimpleNamespace(font_path="", consultation_url="", enable_web_search=False, daily_request_limit=5,
-                             max_file_bytes=1000000, max_input_chars=24000, max_audio_seconds=300)
+                             max_file_bytes=1000000, max_input_chars=24000, max_audio_seconds=300,
+                             session_ttl_seconds=1800)
     row = {"update_id": 1, "session_id": "x", "payload": {"update_id": 1, "message": {
         "message_id": 1, "date": int(time.time()), "chat": {"id": 123, "type": "private"},
         "from": {"id": 123, "is_bot": False, "first_name": "Test"}, "text": text}}}

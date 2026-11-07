@@ -124,6 +124,7 @@ async def index_knowledge(pool, client, config) -> int:
     rows = await pool.fetch("""
         SELECT 'scheme' AS kind,id AS item_id,search_text AS text FROM scheme_cards WHERE status='reviewed'
         UNION ALL SELECT 'legal',id,title||E'\n'||excerpt FROM legal_sources WHERE approved
+        UNION ALL SELECT 'lawyer',id::text,title||E'\n'||content FROM lawyer_materials WHERE active
     """)
     updated = 0
     for row in rows:

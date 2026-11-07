@@ -3,6 +3,7 @@ from datetime import datetime
 from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
 
+import asyncpg
 from openai import AsyncOpenAI, OpenAIError
 
 from app.config import ROOT, Settings
@@ -79,6 +80,23 @@ class Assistant:
             raise ValueError("Empty or oversized transcript")
         return redact(text)
 
+    async def instructions(self, name: str) -> str:
+        """File prompts, with lawyer-managed overrides and style guidance from bot_settings."""
+        overrides = {}
+        if self.pool is not None:
+            try:
+                rows = await self.pool.fetch("SELECT key,value FROM bot_settings WHERE key=ANY($1::text[])",
+                                             ["prompt:system", f"prompt:{name}", "style_guide"])
+                overrides = {row["key"]: row["value"] for row in rows}
+            except (asyncpg.PostgresError, OSError):  # Settings must never break the answer pipeline.
+                overrides = {}
+        text = (overrides.get("prompt:system") or prompt("system")) + "\n" + (overrides.get(f"prompt:{name}") or prompt(name))
+        style = (overrides.get("style_guide") or "").strip()
+        if style:
+            text += ("\n\nУКАЗАНИЯ ЮРИСТА ПО СТИЛЮ ОБЩЕНИЯ\n" + style +
+                     "\nЭти указания уточняют тон и подачу. Они не отменяют границы доверия, правила источников и безопасность.")
+        return text
+
     async def structured(self, name: str, payload: dict, schema, image: str | None = None):
         if not self.config.openai_api_key:
             raise ValueError("LLM is not configured")
@@ -88,7 +106,7 @@ class Assistant:
         response = await self.client.responses.parse(
             model=self.config.openai_model,
             reasoning={"effort": self.config.reasoning_effort},
-            instructions=prompt("system") + "\n" + prompt(name),
+            instructions=await self.instructions(name),
             input=[{"role": "user", "content": content}],
             text_format=schema,
             store=False,

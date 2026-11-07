@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     session_secret: str = Field(min_length=32)
     enable_web_search: bool = False
     consultation_url: str = ""
+    admin_ids: str = ""
     admin_secret: str = ""
     data_encryption_key: str = ""
     embedding_model: str = "text-embedding-3-small"
@@ -35,11 +36,19 @@ class Settings(BaseSettings):
     max_file_bytes: int = Field(default=10 * 1024 * 1024, ge=1024, le=10 * 1024 * 1024)
     max_input_chars: int = Field(default=24000, ge=1000, le=24000)
 
+    def admin_id_set(self) -> frozenset[int]:
+        parts = [part.strip() for part in self.admin_ids.replace(";", ",").split(",")]
+        invalid = [part for part in parts if part and not part.isdigit()]
+        if invalid:
+            raise ValueError("ADMIN_IDS must be comma-separated numeric Telegram IDs")
+        return frozenset(int(part) for part in parts if part)
+
     def validate_bot(self) -> None:
         required = ("telegram_bot_token", "openai_api_key", "data_encryption_key")
         missing = [name.upper() for name in required if not getattr(self, name).strip()]
         if missing:
             raise ValueError("Missing bot settings: " + ", ".join(missing) + ". Set them in Railway Variables.")
+        self.admin_id_set()
         try:
             Fernet(self.data_encryption_key.encode())
         except (ValueError, TypeError):

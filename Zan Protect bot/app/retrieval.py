@@ -28,6 +28,10 @@ async def retrieve(pool, text: str, today: date, vector=None, model: str = "") -
             AND (effective_to IS NULL OR effective_to >= $2)
             AND search_vector @@ q ORDER BY ts_rank(search_vector,q) DESC LIMIT 20
         """, query, today)
+        lawyer = await conn.fetch("""
+            SELECT id::text AS id,title,content,created_at::date AS checked_on FROM lawyer_materials, to_tsquery('simple',$1) q
+            WHERE active AND search_vector @@ q ORDER BY ts_rank(search_vector,q) DESC LIMIT 10
+        """, query)
         if vector:
             candidates = await conn.fetch("""
                 SELECT e.*,s.card,NULL::text AS title,NULL::text AS url,NULL::text AS excerpt,NULL::date AS checked_on,s.search_text AS current_text
@@ -39,22 +43,39 @@ async def retrieve(pool, text: str, today: date, vector=None, model: str = "") -
                 WHERE l.approved AND l.checked_on<=$3 AND l.review_due>=$3
                 AND (l.effective_from IS NULL OR l.effective_from<=$3)
                 AND (l.effective_to IS NULL OR l.effective_to>=$3) AND e.model=$1 AND e.dimensions=$2
+                UNION ALL
+                SELECT e.*,NULL::jsonb,m.title,NULL::text,NULL::text,m.created_at::date,m.title||E'\n'||m.content AS current_text
+                FROM knowledge_embeddings e JOIN lawyer_materials m ON e.kind='lawyer' AND e.item_id=m.id::text
+                WHERE m.active AND e.model=$1 AND e.dimensions=$2
                 LIMIT 5000
             """, model, len(vector), today)
             semantic = sorted(((cosine(vector, r["embedding"]), r) for r in candidates
                                if content_hash(r["current_text"]) == r["content_hash"]),
                               key=lambda pair: pair[0], reverse=True)
-            for kind in ["scheme", "legal"]:
+            for kind in ["scheme", "legal", "lawyer"]:
                 ranked = [r for score, r in semantic if score >= 0.25 and r["kind"] == kind][:20]
-                lexical = cards if kind == "scheme" else sources
+                lexical = {"scheme": cards, "legal": sources, "lawyer": lawyer}[kind]
                 lookup = {r["id"]: dict(r) for r in lexical}
                 for row in ranked:
-                    lookup[row["item_id"]] = ({"id": row["item_id"], "card": row["card"]} if kind == "scheme" else
-                        {"id": row["item_id"], **{k: row[k] for k in ["title", "url", "excerpt", "checked_on"]}})
+                    if kind == "scheme":
+                        lookup[row["item_id"]] = {"id": row["item_id"], "card": row["card"]}
+                    elif kind == "legal":
+                        lookup[row["item_id"]] = {"id": row["item_id"], **{k: row[k] for k in ["title", "url", "excerpt", "checked_on"]}}
+                    else:
+                        lookup[row["item_id"]] = {"id": row["item_id"], "title": row["title"],
+                                                  "content": row["current_text"].split("\n", 1)[1],
+                                                  "checked_on": row["checked_on"]}
                 merged = [lookup[key] for key in fuse([r["id"] for r in lexical], [r["item_id"] for r in ranked])]
                 if kind == "scheme":
                     cards = merged
-                else:
+                elif kind == "legal":
                     sources = merged
+                else:
+                    lawyer = merged
+    lawyer_sources = [Source(id="lawyer-" + row["id"], title=row["title"], url="Внутренний материал юриста Zan Protect",
+                             checked_on=row["checked_on"].isoformat(), excerpt=row["content"][:6000])
+                      for row in lawyer[:2]]
+    legal_sources = [Source(**{**dict(row), "checked_on": row["checked_on"].isoformat()})
+                     for row in sources[:6 - len(lawyer_sources)]]
     return ([json.loads(row["card"]) if isinstance(row["card"], str) else row["card"] for row in cards[:5]],
-            [Source(**{**dict(row), "checked_on": row["checked_on"].isoformat()}) for row in sources[:6]])
+            legal_sources + lawyer_sources)

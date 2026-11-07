@@ -44,6 +44,18 @@ class PrivateStore:
             await conn.execute("DELETE FROM private_sessions WHERE id=$1", key)
             await conn.execute("UPDATE bot_jobs SET status='cancelled',payload=NULL WHERE session_id=$1", key)
 
+    async def get_setting(self, key: str) -> str | None:
+        return await self.pool.fetchval("SELECT value FROM bot_settings WHERE key=$1", key)
+
+    async def set_setting(self, key: str, value: str, actor: str):
+        if not value:
+            await self.pool.execute("DELETE FROM bot_settings WHERE key=$1", key)
+            return
+        await self.pool.execute("""
+            INSERT INTO bot_settings(key,value,updated_by,updated_at) VALUES($1,$2,$3,now())
+            ON CONFLICT(key) DO UPDATE SET value=excluded.value,updated_by=excluded.updated_by,updated_at=now()
+        """, key, value, actor)
+
     async def quota(self, key: str, limit: int) -> bool:
         count = await self.pool.fetchval("""
             INSERT INTO request_quotas(id,day,requests) VALUES($1,(now() AT TIME ZONE 'Asia/Qyzylorda')::date,1)

@@ -10,6 +10,7 @@ import asyncpg
 from aiogram import Bot
 from aiogram.types import BufferedInputFile, KeyboardButton, Message, ReplyKeyboardMarkup, Update
 
+from app.admin import AdminPanel
 from app.audio import audio_attachment
 from app.cases import Case
 from app.config import settings
@@ -117,7 +118,8 @@ class Controller:
                        ("Поиск включён." if enabled else "Поиск выключен."))
             return
         if text == "Юрист / Заңгер":
-            await send(self.cfg.consultation_url or ("Байланыс әлі орнатылмаған." if kk else "Контакт консультации ещё не настроен."))
+            contact = await self.store.get_setting("consultation_contact") or self.cfg.consultation_url
+            await send(contact or ("Байланыс әлі орнатылмаған." if kk else "Контакт консультации ещё не настроен."))
             return
         if text in {"Проверь / Тексер", "/check", "Уже случилось / Болып қойды", "/help_mode", "/reset"}:
             s.mode = "check" if text in {"Проверь / Тексер", "/check"} else "help"
@@ -282,6 +284,7 @@ async def run():
     assistant = Assistant(cfg, pool)
     bot = Bot(cfg.telegram_bot_token)
     controller = Controller(bot, store, assistant, cfg)
+    admin = AdminPanel(bot, pool, store, assistant, cfg, MENU)
     active = {}
     leader = await asyncpg.connect(cfg.database_url)
     lock = int.from_bytes(hashlib.sha256(cfg.telegram_bot_token.encode()).digest()[:8], "big", signed=True)
@@ -290,6 +293,9 @@ async def run():
 
     async def incoming(message: Message, event_update: Update):
         if message.chat.type != "private" or not message.from_user:
+            return
+        if admin.claims(message.from_user.id, message.text or message.caption or ""):
+            admin.spawn(message)
             return
         key = session_key(message.from_user.id, cfg.session_secret)
         text = message.text or ""

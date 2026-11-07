@@ -145,7 +145,7 @@ async def test_audio_requires_separate_consent_before_download():
     await controller.handle(row)
     bot.download.assert_not_called()
     assistant.transcribe.assert_not_called()
-    assert "внешнему ИИ" in bot.sent[0].text
+    assert "внешний сервис" in bot.sent[0].text
 
 
 async def test_voice_transcript_uses_dialogue_routing():

@@ -44,6 +44,7 @@ class Session:
     busy: bool = False
     last_request: float = 0
     case: dict = field(default_factory=dict)
+    pending: str = ""
 
 
 class Sessions:

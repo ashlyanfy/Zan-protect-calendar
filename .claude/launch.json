@@ -12,6 +12,12 @@
       "runtimeExecutable": "node",
       "runtimeArgs": ["C:\\Users\\tarih\\OneDrive\\Рабочий стол\\Law calendar\\frontend\\node_modules\\vite\\bin\\vite.js", "C:\\Users\\tarih\\OneDrive\\Рабочий стол\\Law calendar\\frontend"],
       "port": 5173
+    },
+    {
+      "name": "shakh-landing",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "5599", "--directory", "C:\\Users\\tarih\\OneDrive\\Рабочий стол\\Law calendar\\landing-shakherezada"],
+      "port": 5599
     }
   ]
 }

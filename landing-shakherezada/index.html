@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Шехерезада Куралбек — Юрист</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:     #020a12;
+  --deep:     #050f1a;
+  --navy:     #071828;
+  --panel:    #0a1e2e;
+  --panel2:   #0d2438;
+  --border:   rgba(0,180,220,.15);
+  --border2:  rgba(0,180,220,.06);
+  --cyan:     #00b4dc;
+  --cyan2:    #0af0ff;
+  --cyan-dim: rgba(0,180,220,.3);
+  --cyan-glow:rgba(0,180,220,.1);
+  --text:     #e0f2f8;
+  --text-dim: rgba(224,242,248,.55);
+  --text-muted:rgba(224,242,248,.28);
+  --font-h: 'Syne', sans-serif;
+  --font-b: 'Space Grotesk', sans-serif;
+  --nav-h: 64px;
+  --max: 1280px;
+  --r: 3px;
+  --ease: cubic-bezier(0.22,1,0.36,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:#050B12;color:var(--text);font-family:var(--font-b);font-weight:400;line-height:1.65;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img{display:block;width:100%}
+
+/* ANIMATED MESH NETWORK BACKGROUND (canvas) */
+#mesh-bg{
+  position:fixed;inset:0;width:100%;height:100%;
+  z-index:-1;pointer-events:none;display:block;
+  background:#050B12;
+}
+/* subtle grid overlay above the mesh for tech depth */
+body::before{
+  content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,180,220,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,180,220,.025) 1px, transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 100%);
+}
+
+/* PROGRESS */
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--cyan2));width:0%;z-index:1001;box-shadow:0 0 12px var(--cyan);transition:width .1s linear}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(2,10,18,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:500;display:flex;align-items:center}
+.nav-inner{max-width:var(--max);width:100%;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.nav-logo{font-family:var(--font-h);font-size:16px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text);white-space:nowrap;display:flex;align-items:center;gap:10px}
+.nav-logo-dot{width:8px;height:8px;background:var(--cyan);border-radius:50%;box-shadow:0 0 10px var(--cyan);animation:pdot 2s ease-in-out infinite;flex-shrink:0}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.65)}}
+.nav-logo span{color:var(--cyan)}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);transition:color .25s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--cyan);transform:scaleX(0);transition:transform .25s;transform-origin:left}
+.nav-links a:hover{color:var(--cyan)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-btns{display:flex;gap:10px;align-items:center}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-b);font-weight:600;font-size:13px;letter-spacing:.07em;padding:11px 22px;border-radius:var(--r);cursor:pointer;border:1px solid transparent;transition:all .3s var(--ease);white-space:nowrap;text-transform:uppercase}
+.btn-cyan{background:var(--cyan);color:var(--void);border-color:var(--cyan);box-shadow:0 0 20px rgba(0,180,220,.25)}
+.btn-cyan:hover{background:var(--cyan2);transform:translateY(-1px);box-shadow:0 0 32px rgba(10,240,255,.45)}
+.btn-ghost{background:transparent;color:var(--cyan);border-color:var(--border)}
+.btn-ghost:hover{border-color:var(--cyan);background:var(--cyan-glow)}
+.btn-wa{background:#25D366;color:#fff;border-color:#25D366}
+.btn-wa:hover{background:#1eb858;transform:translateY(-1px)}
+.btn-outline-w{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-outline-w:hover{border-color:var(--cyan-dim);color:var(--cyan)}
+.btn-dark{background:var(--panel);color:var(--text);border-color:var(--border)}
+.btn-dark:hover{border-color:var(--cyan-dim);background:var(--panel2)}
+.btn-white{background:var(--cyan);color:var(--void);border-color:var(--cyan)}
+.btn-white:hover{background:var(--cyan2);transform:translateY(-1px)}
+.btn-lg{font-size:15px;padding:15px 34px}
+
+/* BURGER */
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.burger span{display:block;width:22px;height:1.5px;background:var(--cyan);transition:all .3s var(--ease)}
+.burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+/* MOBILE MENU */
+.mobile-menu{display:none;position:fixed;top:var(--nav-h);left:0;right:0;background:rgba(5,15,26,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:24px 24px 32px;z-index:499;transform:translateY(-8px);opacity:0;transition:opacity .3s var(--ease),transform .3s var(--ease);pointer-events:none}
+.mobile-menu.open{opacity:1;transform:none;pointer-events:all}
+.mobile-menu ul{list-style:none;margin-bottom:20px}
+.mobile-menu li{border-bottom:1px solid var(--border2)}
+.mobile-menu a{display:block;padding:14px 0;font-size:16px;font-weight:600;letter-spacing:.04em;color:var(--text)}
+.mobile-btns{display:flex;flex-direction:column;gap:10px}
+.mobile-btns .btn{width:100%;font-size:15px;padding:15px}
+
+/* LAYOUT */
+.wrap{max-width:var(--max);margin:0 auto;padding:0 40px}
+section{padding:100px 0;position:relative;z-index:1}
+
+/* SECTION LABELS */
+.section-eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+.section-eyebrow::before{content:'//';color:var(--cyan-dim);font-weight:400}
+.section-title{font-family:var(--font-h);font-size:clamp(32px,3.5vw,50px);font-weight:800;line-height:1.08;color:var(--text)}
+.section-title em{font-style:normal;color:var(--cyan)}
+.rule{width:40px;height:1px;background:var(--cyan-dim);margin:24px 0}
+
+/* REVEAL */
+.r{opacity:0;transform:translateY(20px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.r.v{opacity:1;transform:none}
+
+/* ── 1. HERO ──
+   Первый экран — только Фемида на анимированном фоне.
+   Текст появляется по мере прокрутки (см. heroFade в скрипте). */
+#hero{height:190vh;padding:0;position:relative}
+.hero-sticky{position:sticky;top:0;height:100svh;display:flex;align-items:center;overflow:hidden}
+/* текст прижат к левому краю, статуя — справа */
+.hero-sticky .wrap{max-width:none;margin:0;padding-left:clamp(24px,5.5vw,104px)}
+.hero-copy{max-width:600px;opacity:0;transform:translateY(46px);will-change:opacity,transform;pointer-events:none}
+.hero-hint{
+  position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--text-dim);
+}
+.hero-hint svg{color:var(--cyan);animation:hintdown 1.8s ease-in-out infinite}
+@keyframes hintdown{0%,100%{transform:translateY(-2px);opacity:.5}50%{transform:translateY(4px);opacity:1}}
+.hero-eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:20px;font-weight:600;display:flex;align-items:center;gap:8px}
+.hero-eyebrow::before{content:'//';color:var(--cyan-dim)}
+.hero-title{font-family:var(--font-h);font-size:clamp(40px,4.5vw,64px);font-weight:800;line-height:1.05;color:var(--text);margin-bottom:24px}
+.hero-title em{font-style:normal;color:var(--cyan)}
+.hero-sub{font-size:17px;color:var(--text-dim);max-width:420px;margin-bottom:48px;line-height:1.75}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:56px}
+.hero-stats{display:flex;gap:40px;padding-top:36px;border-top:1px solid var(--border)}
+.hstat-num{font-family:var(--font-h);font-size:36px;font-weight:800;line-height:1;margin-bottom:4px;color:var(--cyan)}
+.hstat-label{font-size:12px;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase}
+
+/* ── ЕДИНЫЙ ПОЛУПРОЗРАЧНЫЙ ФОН всех секций после интро ── */
+.shell{position:relative;z-index:1;background:rgba(4,13,22,.74);border-top:1px solid var(--border2)}
+.shell::before{
+  content:'';position:absolute;top:-140px;left:0;right:0;height:140px;
+  background:linear-gradient(180deg,transparent,rgba(4,13,22,.74));
+  pointer-events:none;
+}
+.shell section{background:transparent}
+
+/* ── 2. ABOUT ── */
+#about::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 100% 50%, rgba(0,180,220,.05) 0%, transparent 70%);pointer-events:none}
+.about-grid{display:grid;grid-template-columns:minmax(0,560px) minmax(300px,430px);gap:70px;justify-content:space-between;align-items:center}
+#about .section-title{color:var(--text)}
+#about .rule{background:var(--cyan-dim)}
+.about-text{font-size:16px;color:var(--text-dim);line-height:1.85;margin-bottom:16px}
+
+/* ФОТО: динамичное появление + парение */
+.about-photo{position:relative;margin:0;width:100%;max-width:430px;justify-self:end}
+.about-photo-frame{
+  position:relative;overflow:hidden;border-radius:var(--r);
+  border:1px solid var(--border);
+  box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 46px rgba(0,180,220,.14);
+}
+.about-photo-frame img{width:100%;display:block;aspect-ratio:4/5;object-fit:cover;object-position:top center}
+.about-photo-line{
+  position:absolute;left:0;right:0;top:0;height:2px;opacity:0;
+  background:linear-gradient(90deg,transparent,var(--cyan2),transparent);
+  box-shadow:0 0 16px var(--cyan);pointer-events:none;
+}
+.about-photo-card{
+  position:absolute;left:16px;right:16px;bottom:16px;z-index:2;
+  background:rgba(5,15,26,.85);backdrop-filter:blur(12px);
+  border:1px solid var(--border);border-radius:var(--r);padding:13px 17px;
+}
+.about-photo-card::before{content:'';position:absolute;top:0;left:20px;right:20px;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.about-photo-name{font-family:var(--font-h);font-size:17px;font-weight:700;color:var(--text)}
+.about-photo-role{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-top:2px}
+
+/* старт: сдвиг + наклон + «наезд» самой фотографии */
+.about-photo.r{opacity:0;transform:translateY(80px) rotate(3deg) scale(1.04)}
+.about-photo.r img{transform:scale(1.28);filter:saturate(.3) brightness(.6)}
+.about-photo.r.v{
+  opacity:1;transform:none;
+  transition:opacity .9s var(--ease),transform 1.15s var(--ease);
+}
+.about-photo.r.v img{
+  transform:none;filter:none;
+  transition:transform 1.6s var(--ease),filter 1.3s ease;
+}
+.about-photo.r.v .about-photo-line{animation:photoscan 1.5s var(--ease) .25s 1}
+.about-photo.r.v .about-photo-frame{animation:photofloat 7s ease-in-out 1.8s infinite}
+@keyframes photoscan{0%{top:0;opacity:.95}100%{top:100%;opacity:0}}
+@keyframes photofloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+
+/* ── 3. SERVICES ── */
+/* фон секций задаёт общий .shell */
+#services::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 0% 50%, rgba(0,180,220,.04) 0%, transparent 70%);pointer-events:none}
+.services-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:60px;gap:32px}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border2);border:1px solid var(--border2);border-radius:var(--r);overflow:hidden}
+.svc-card{background:var(--deep);padding:36px 32px;transition:background .3s,border-color .3s;position:relative;border:1px solid transparent}
+.svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan-dim),transparent);opacity:0;transition:opacity .3s}
+.svc-card:hover{background:var(--panel)}
+.svc-card:hover::before{opacity:1}
+.svc-card:hover .svc-num,.svc-card:hover .svc-name,.svc-card:hover .svc-desc{color:var(--text)}
+.svc-card:hover .svc-price{color:var(--cyan);border-color:var(--cyan-dim)}
+.svc-card:hover .svc-cta{color:var(--cyan);border-color:var(--cyan-dim)}
+.svc-num{font-family:var(--font-h);font-size:11px;color:var(--text-muted);font-weight:700;margin-bottom:28px;transition:color .3s;letter-spacing:.1em}
+.svc-name{font-family:var(--font-h);font-size:20px;font-weight:700;line-height:1.2;margin-bottom:12px;transition:color .3s;color:var(--text)}
+.svc-desc{font-size:14px;color:var(--text-dim);line-height:1.75;margin-bottom:24px;transition:color .3s}
+.svc-price{display:inline-block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;margin-bottom:24px;transition:color .3s,border-color .3s}
+.svc-cta{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border);padding:8px 16px;border-radius:var(--r);color:var(--text-dim);transition:all .3s}
+
+/* ── 4. IMAGE BAND ── */
+#imgband{height:420px;position:relative;overflow:hidden;padding:0}
+.imgband-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,10,18,.9) 0%,rgba(2,10,18,.5) 60%,transparent 100%);display:flex;align-items:center}
+.imgband-text{max-width:540px;padding:0 40px}
+.imgband-text .section-eyebrow{color:var(--cyan)}
+.imgband-quote{font-family:var(--font-h);font-size:clamp(22px,2.8vw,36px);line-height:1.3;font-weight:700;margin:12px 0 24px;color:var(--text)}
+.imgband-quote span{color:var(--cyan)}
+
+/* ── 5. ADVANTAGES ── */
+
+.adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.adv-item{display:flex;align-items:flex-start;gap:20px;padding:24px 0;border-bottom:1px solid var(--border2)}
+.adv-item:first-child{border-top:1px solid var(--border2)}
+.adv-n{font-family:var(--font-h);font-size:11px;color:var(--cyan);min-width:24px;padding-top:3px;font-weight:700;letter-spacing:.08em}
+.adv-title{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--text)}
+.adv-text{font-size:14px;color:var(--text-dim);line-height:1.7}
+.adv-img-box{aspect-ratio:3/4;background:var(--panel);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;position:relative}
+.adv-img-box::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,180,220,.05) 0%,transparent 60%)}
+
+/* ── 7. CTA ── */
+#cta{text-align:center;padding:120px 0;position:relative;overflow:hidden}
+#cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 50%, rgba(0,180,220,.07) 0%, transparent 70%);pointer-events:none}
+#cta::after{content:'ЗАН';position:absolute;bottom:-60px;right:-40px;font-family:var(--font-h);font-size:320px;font-weight:800;color:rgba(0,180,220,.03);line-height:1;pointer-events:none;user-select:none}
+.cta-sub{font-size:18px;color:var(--text-dim);max-width:480px;margin:0 auto 48px;line-height:1.7}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+#cta .rule{margin:24px auto}
+
+/* ── 8. CONTACTS ── */
+#contacts{padding:80px 0 60px}
+.contacts-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:60px;margin-bottom:60px}
+.contact-brand{font-family:var(--font-h);font-size:20px;font-weight:800;margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--text)}
+.contact-brand span{color:var(--cyan)}
+.contact-desc{font-size:14px;color:var(--text-dim);line-height:1.75;max-width:300px;margin-bottom:24px}
+.contact-col-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px;font-weight:600}
+.contact-col ul{list-style:none}
+.contact-col li{font-size:14px;color:var(--text-dim);padding:8px 0;border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:8px}
+.contact-col li svg{color:var(--cyan);flex-shrink:0}
+.contact-col a{color:var(--text-dim);transition:color .2s}
+.contact-col a:hover{color:var(--cyan)}
+.footer-bar{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid var(--border2)}
+.footer-copy{font-size:12px;color:var(--text-muted);letter-spacing:.04em}
+
+
+/* ── ФЕМИДА — фиксированный 3D-фон на всю страницу ── */
+#themis-canvas{
+  position:fixed;inset:0;width:100%;height:100%;
+  display:block;z-index:0;pointer-events:none;
+}
+/* нет WebGL — показываем hero-текст сразу */
+body.no-3d #themis-canvas{display:none}
+body.no-3d #hero{height:100svh}
+body.no-3d .hero-copy{opacity:1 !important;transform:none !important;pointer-events:auto !important}
+body.no-3d .hero-hint{display:none}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .wrap{padding:0 24px}
+  .nav-inner{padding:0 24px}
+  #hero{height:170vh}
+  .hero-copy{max-width:520px}
+  .about-grid,.adv-grid{grid-template-columns:1fr;gap:40px}
+  .about-photo{justify-self:center;max-width:380px}
+  .adv-img-box{aspect-ratio:16/7}
+  .services-grid{grid-template-columns:1fr 1fr}
+  .contacts-grid{grid-template-columns:1fr 1fr;gap:40px}
+}
+@media(max-width:768px){
+  :root{--nav-h:56px}
+  section{padding:64px 0}
+  .wrap{padding:0 18px}
+  .nav-inner{padding:0 18px}
+  .nav-links,.nav-btns{display:none}
+  .burger{display:flex}
+  .mobile-menu{display:block}
+
+  /* HERO — текст поверх Фемиды, появляется при прокрутке */
+  #hero{height:160vh}
+  .hero-copy{
+    max-width:100%;padding:20px 18px;border-radius:6px;
+    background:rgba(2,10,18,.62);backdrop-filter:blur(8px);
+    border:1px solid var(--border2);
+  }
+  .hero-eyebrow{margin-bottom:14px}
+  .hero-title{font-size:clamp(32px,8.5vw,42px);margin-bottom:16px}
+  .hero-sub{font-size:15px;margin-bottom:28px;max-width:100%}
+  .hero-ctas{gap:10px;margin-bottom:36px}
+  .hero-ctas .btn{flex:1 1 100%;width:100%;padding:14px 18px}
+  .hero-stats{gap:0;flex-wrap:nowrap;justify-content:space-between;padding-top:28px}
+  .hero-stats > div{flex:1;text-align:center}
+  .hstat-num{font-size:26px}
+  .hstat-label{font-size:10px;letter-spacing:.02em}
+  .hero-hint{bottom:40px}
+
+  /* CONTENT */
+  .about-grid,.adv-grid{gap:32px}
+  .services-grid{grid-template-columns:1fr}
+  .services-top{flex-direction:column;align-items:flex-start;gap:20px;margin-bottom:40px}
+  .services-top .btn{width:100%}
+  .svc-card{padding:28px 24px}
+  .adv-item{gap:14px}
+  .contacts-grid{grid-template-columns:1fr;gap:32px}
+  .footer-bar{flex-direction:column;gap:12px;text-align:center}
+  #cta{padding:80px 0}
+  .cta-btns{flex-direction:column;align-items:center}
+  .cta-btns .btn{width:100%;max-width:320px}
+  #imgband{height:280px}
+  .imgband-quote{font-size:20px}
+  .imgband-text{padding:0 20px}
+}
+@media(max-width:380px){
+  .hero-title{font-size:30px}
+  .hstat-num{font-size:22px}
+  .hstat-label{font-size:9px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="mesh-bg"></canvas>
+
+<canvas id="themis-canvas" aria-hidden="true"></canvas>
+
+<div id="prog"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-dot"></div>
+      Шехерезада <span>Куралбек</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">Обо мне</a></li>
+      <li><a href="#services">Услуги</a></li>
+      <li><a href="#advantages">Преимущества</a></li>
+      <li><a href="#contacts">Контакты</a></li>
+    </ul>
+    <div class="nav-btns">
+      <a href="tel:+77066183101" class="btn btn-ghost">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-2.89-7.85A2 2 0 0 1 4.68 3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 10.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17v-.08z"/></svg>
+        Позвонить
+      </a>
+      <a href="https://wa.me/77066183101?text=Здравствуйте!%20Хочу%20получить%20консультацию." target="_blank" class="btn btn-cyan">Консультация</a>
+    </div>
+    <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <ul>
+    <li><a href="#about" class="mm-link">Обо мне</a></li>
+    <li><a href="#services" class="mm-link">Услуги</a></li>
+    <li><a href="#advantages" class="mm-link">Преимущества</a></li>
+    <li><a href="#contacts" class="mm-link">Контакты</a></li>
+  </ul>
+  <div class="mobile-btns">
+    <a href="tel:+77066183101" class="btn btn-ghost">Позвонить</a>
+    <a href="https://wa.me/77066183101" target="_blank" class="btn btn-wa">WhatsApp</a>
+    <a href="#cta" class="mm-link btn btn-cyan">Консультация</a>
+  </div>
+</div>
+
+<!-- 1. HERO -->
+<section id="hero">
+  <div class="hero-sticky">
+    <div class="wrap">
+      <div class="hero-copy" id="heroCopy">
+        <p class="hero-eyebrow">Юрист · Алматы</p>
+        <h1 class="hero-title">Ваша защита<br><em>в руках профессионала</em></h1>
+        <p class="hero-sub">Специализируюсь на уголовном праве и правовой безопасности. Расскажите о ситуации — разберёмся вместе.</p>
+        <div class="hero-ctas">
+          <a href="https://wa.me/77066183101?text=Здравствуйте!%20Хочу%20получить%20консультацию." target="_blank" class="btn btn-cyan btn-lg">Получить консультацию</a>
+          <a href="tel:+77066183101" class="btn btn-ghost btn-lg">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-2.89-7.85A2 2 0 0 1 4.68 3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 10.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17v-.08z"/></svg>
+            Позвонить
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div><div class="hstat-num">5+</div><div class="hstat-label">лет практики</div></div>
+          <div><div class="hstat-num">120+</div><div class="hstat-label">дел завершено</div></div>
+          <div><div class="hstat-num">100%</div><div class="hstat-label">конфиденциальность</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-hint" id="heroHint">
+      Листайте
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+    </div>
+  </div>
+</section>
+
+<div class="shell">
+
+<!-- 2. ОБО МНЕ -->
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+            <div>
+        <p class="section-eyebrow r">Обо мне</p>
+        <h2 class="section-title r" style="transition-delay:.1s">Юрист, которому<br><em>можно доверять</em></h2>
+        <div class="rule r" style="transition-delay:.15s"></div>
+        <p class="about-text r" style="transition-delay:.2s">Меня зовут Шехерезада Куралбек. Я юрист с специализацией в уголовном праве и правовом обеспечении национальной безопасности. Работаю с частными клиентами и организациями по всему Казахстану.</p>
+        <p class="about-text r" style="transition-delay:.25s">Мой принцип — честность. Скажу прямо, что можно сделать в вашей ситуации, а не буду обнадёживать ради гонорара. Работаю на результат, а не на процесс.</p>
+        <p class="about-text r" style="transition-delay:.3s">За 5 лет практики завершила более 120 дел. Помогаю людям в по-настоящему трудные моменты жизни — когда цена ошибки слишком высока.</p>
+        <div class="r" style="transition-delay:.35s;margin-top:32px">
+          <a href="#services" class="btn btn-dark btn-lg">Мои услуги</a>
+        </div>
+      </div>
+      <figure class="about-photo r" style="transition-delay:.2s">
+        <div class="about-photo-frame">
+          <img src="images/portrait.jpg" alt="Шехерезада Куралбек — юрист">
+          <span class="about-photo-line"></span>
+        </div>
+        <figcaption class="about-photo-card">
+          <div class="about-photo-name">Шехерезада Куралбек</div>
+          <div class="about-photo-role">Юрист по уголовным делам · Алматы</div>
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- 3. УСЛУГИ -->
+<section id="services">
+  <div class="wrap">
+    <div class="services-top">
+      <div>
+        <p class="section-eyebrow r">Услуги</p>
+        <h2 class="section-title r" style="transition-delay:.1s">Чем я<br><em>могу помочь</em></h2>
+      </div>
+      <a href="https://wa.me/77066183101?text=Здравствуйте!%20Хочу%20задать%20вопрос." target="_blank" class="btn btn-cyan r" style="transition-delay:.2s">Задать вопрос</a>
+    </div>
+    <div class="services-grid">
+      <div class="svc-card r" style="transition-delay:.1s">
+        <div class="svc-num">// 01</div>
+        <div class="svc-name">Защита по уголовным делам</div>
+        <p class="svc-desc">Представляю интересы подозреваемых, обвиняемых и подсудимых. Работаю с делами любой сложности — от первого допроса до апелляции.</p>
+        <div class="svc-price">от 50 000 ₸</div><br>
+        <a href="https://wa.me/77066183101?text=Нужна%20защита%20по%20уголовному%20делу" target="_blank" class="svc-cta">Подробнее →</a>
+      </div>
+      <div class="svc-card r" style="transition-delay:.15s">
+        <div class="svc-num">// 02</div>
+        <div class="svc-name">Правовая безопасность бизнеса</div>
+        <p class="svc-desc">Оцениваю уголовные риски для предпринимателей, помогаю выстроить защиту до возбуждения дела. Профилактика лучше последствий.</p>
+        <div class="svc-price">от 40 000 ₸</div><br>
+        <a href="https://wa.me/77066183101?text=Нужна%20правовая%20безопасность%20бизнеса" target="_blank" class="svc-cta">Подробнее →</a>
+      </div>
+      <div class="svc-card r" style="transition-delay:.2s">
+        <div class="svc-num">// 03</div>
+        <div class="svc-name">Гражданские споры</div>
+        <p class="svc-desc">Представляю интересы в суде по имущественным, долговым и договорным спорам. От составления иска до исполнения решения.</p>
+        <div class="svc-price">от 25 000 ₸</div><br>
+        <a href="https://wa.me/77066183101?text=Гражданский%20спор" target="_blank" class="svc-cta">Подробнее →</a>
+      </div>
+      <div class="svc-card r" style="transition-delay:.25s">
+        <div class="svc-num">// 04</div>
+        <div class="svc-name">Семейные споры</div>
+        <p class="svc-desc">Раздел имущества, алименты, определение места жительства детей. Помогу пройти через это с минимальными потерями.</p>
+        <div class="svc-price">от 30 000 ₸</div><br>
+        <a href="https://wa.me/77066183101?text=Семейный%20спор" target="_blank" class="svc-cta">Подробнее →</a>
+      </div>
+      <div class="svc-card r" style="transition-delay:.3s">
+        <div class="svc-num">// 05</div>
+        <div class="svc-name">Консультации онлайн</div>
+        <p class="svc-desc">Не можете приехать лично? Проконсультирую дистанционно — по телефону, видеосвязи или в WhatsApp. Быстро и по делу.</p>
+        <div class="svc-price">от 10 000 ₸</div><br>
+        <a href="https://wa.me/77066183101?text=Хочу%20онлайн%20консультацию" target="_blank" class="svc-cta">Подробнее →</a>
+      </div>
+      <div class="svc-card r" style="transition-delay:.35s">
+        <div class="svc-num">// 06</div>
+        <div class="svc-name">Взыскание долгов</div>
+        <p class="svc-desc">Взыщу задолженность через суд с физических лиц и организаций — от подачи иска до фактического получения денег.</p>
+        <div class="svc-price">% от суммы</div><br>
+        <a href="https://wa.me/77066183101?text=Взыскание%20долга" target="_blank" class="svc-cta">Подробнее →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. IMAGE BAND -->
+<section id="imgband">
+  <img src="images/img3.webp" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" alt="">
+  <div class="imgband-overlay">
+    <div class="imgband-text">
+      <p class="section-eyebrow">Мой подход</p>
+      <p class="imgband-quote">«Когда на кону свобода или справедливость — <span>важно, кто стоит рядом</span>»</p>
+      <a href="#cta" class="btn btn-cyan btn-lg">Первая консультация бесплатно</a>
+    </div>
+  </div>
+</section>
+
+<!-- 5. ПРЕИМУЩЕСТВА -->
+<section id="advantages">
+  <div class="wrap">
+    <div class="adv-grid">
+      <div>
+        <p class="section-eyebrow r">Почему я</p>
+        <h2 class="section-title r" style="transition-delay:.1s">Причины<br><em>выбрать меня</em></h2>
+        <div class="rule r" style="transition-delay:.15s"></div>
+        <div class="adv-item r" style="transition-delay:.2s">
+          <div class="adv-n">01</div>
+          <div><div class="adv-title">Редкая специализация — уголовное право и нацбезопасность</div><p class="adv-text">Мало юристов работают на стыке уголовного права и правового обеспечения национальной безопасности. Это узкая и востребованная экспертиза.</p></div>
+        </div>
+        <div class="adv-item r" style="transition-delay:.25s">
+          <div class="adv-n">02</div>
+          <div><div class="adv-title">120+ завершённых дел за 5 лет</div><p class="adv-text">Реальный опыт, а не красивые слова. Клиенты возвращаются и рекомендуют меня близким — это лучшая оценка работы.</p></div>
+        </div>
+        <div class="adv-item r" style="transition-delay:.3s">
+          <div class="adv-n">03</div>
+          <div><div class="adv-title">Отвечаю в течение часа</div><p class="adv-text">Напишите в WhatsApp или Instagram — отвечу быстро, без воды и отписок. Ценю ваше время.</p></div>
+        </div>
+        <div class="adv-item r" style="transition-delay:.35s">
+          <div class="adv-n">04</div>
+          <div><div class="adv-title">Полная конфиденциальность</div><p class="adv-text">Всё, что вы мне рассказываете, остаётся между нами. Профессиональная тайна — это не просто слова, это основа доверия.</p></div>
+        </div>
+        <div class="adv-item r" style="transition-delay:.4s">
+          <div class="adv-n">05</div>
+          <div><div class="adv-title">Первая консультация — бесплатно</div><p class="adv-text">Расскажите о ситуации. Дам честную оценку и объясню, что реально можно сделать — без обязательств и давления.</p></div>
+        </div>
+      </div>
+      <div class="r" style="transition-delay:.2s">
+        <div class="adv-img-box">
+          <img src="images/img4.webp" style="width:100%;height:100%;object-fit:cover" alt="Юрист">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. CTA -->
+<section id="cta">
+  <div class="wrap">
+    <p class="section-eyebrow r" style="justify-content:center">Начните сейчас</p>
+    <h2 class="section-title r" style="transition-delay:.1s">Получите консультацию<br><em>уже сегодня</em></h2>
+    <div class="rule r" style="transition-delay:.15s"></div>
+    <p class="cta-sub r" style="transition-delay:.2s">Первая консультация — бесплатно.<br>Расскажите о ситуации — найдём решение вместе.</p>
+    <div class="cta-btns r" style="transition-delay:.3s">
+      <a href="https://wa.me/77066183101?text=Здравствуйте!%20Хочу%20записаться%20на%20бесплатную%20консультацию." target="_blank" class="btn btn-wa btn-lg">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        Написать в WhatsApp
+      </a>
+      <a href="tel:+77066183101" class="btn btn-ghost btn-lg">Позвонить</a>
+      <a href="https://instagram.com/shekherezada.kuralbek" target="_blank" class="btn btn-outline-w btn-lg">Instagram</a>
+    </div>
+  </div>
+</section>
+
+<!-- 8. КОНТАКТЫ -->
+<section id="contacts">
+  <div class="wrap">
+    <div class="contacts-grid">
+      <div>
+        <div class="contact-brand">Шехерезада <span>Куралбек</span></div>
+        <p class="contact-desc">Юрист по уголовным делам и правовой безопасности. Работаю в Алматы и дистанционно по всему Казахстану.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a href="tel:+77066183101" class="btn btn-dark">Позвонить</a>
+          <a href="https://wa.me/77066183101" target="_blank" class="btn btn-wa">WhatsApp</a>
+        </div>
+      </div>
+      <div class="contact-col">
+        <div class="contact-col-title">Контакты</div>
+        <ul>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-2.89-7.85A2 2 0 0 1 4.68 3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 10.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17v-.08z"/></svg>
+            <a href="tel:+77066183101">+7 706 618-31-01</a>
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <a href="https://wa.me/77066183101" target="_blank">WhatsApp</a>
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            <a href="https://instagram.com/shekherezada.kuralbek" target="_blank">@shekherezada.kuralbek</a>
+          </li>
+        </ul>
+      </div>
+      <div class="contact-col">
+        <div class="contact-col-title">Режим работы</div>
+        <ul>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Алматы, Казахстан
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Пн–Пт: 9:00–19:00
+          </li>
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Сб: 10:00–15:00
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bar">
+      <div class="footer-copy">© 2025 Шехерезада Куралбек. Все права защищены.</div>
+      <div class="footer-copy">Алматы, Казахстан</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /.shell -->
+
+
+<script>
+const prog = document.getElementById('prog');
+const burger = document.getElementById('burger');
+const mobileMenu = document.getElementById('mobileMenu');
+
+window.addEventListener('scroll', () => {
+  const st = window.scrollY;
+  const dh = document.documentElement.scrollHeight - window.innerHeight;
+  prog.style.width = (st / dh * 100) + '%';
+}, { passive: true });
+
+/* HERO: первый экран — только Фемида; текст въезжает при прокрутке */
+const heroCopy = document.getElementById('heroCopy');
+const heroHint = document.getElementById('heroHint');
+function heroFade() {
+  if (document.body.classList.contains('no-3d')) return;
+  const vh = window.innerHeight;
+  const t = Math.min(1, Math.max(0, (window.scrollY - vh * 0.1) / (vh * 0.45)));
+  heroCopy.style.opacity = t;
+  heroCopy.style.transform = 'translateY(' + ((1 - t) * 46) + 'px)';
+  heroCopy.style.pointerEvents = t > 0.5 ? 'auto' : 'none';
+  heroHint.style.opacity = Math.max(0, 1 - window.scrollY / (vh * 0.25));
+}
+window.addEventListener('scroll', heroFade, { passive: true });
+window.addEventListener('resize', heroFade);
+heroFade();
+
+const revEls = document.querySelectorAll('.r');
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('v'); revObs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+revEls.forEach(el => revObs.observe(el));
+
+
+burger.addEventListener('click', () => {
+  const open = burger.classList.toggle('open');
+  mobileMenu.classList.toggle('open', open);
+});
+document.querySelectorAll('.mm-link').forEach(l => l.addEventListener('click', () => {
+  burger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+}));
+
+/* ── ANIMATED MESH NETWORK BACKGROUND ── */
+(function () {
+  const canvas = document.getElementById('mesh-bg');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d', { alpha: false });
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const BG = '#050B12';
+  const CYAN = { r: 0, g: 207, b: 255 };   // #00CFFF
+
+  let W = 0, H = 0, dpr = 1;
+  let nodes = [];
+  let linkDist = 150;
+  // pointer (for attraction + parallax), in CSS px
+  const pointer = { x: -9999, y: -9999, px: 0, py: 0, active: false };
+
+  function isMobile() { return window.innerWidth < 768; }
+
+  function nodeCount() {
+    // adaptive density based on viewport area
+    const area = window.innerWidth * window.innerHeight;
+    const base = isMobile() ? 11000 : 8500;
+    let n = Math.round(area / base);
+    return Math.max(24, Math.min(n, isMobile() ? 55 : 130));
+  }
+
+  function makeNode() {
+    const depth = Math.random();           // 0 (far) .. 1 (near) → depth effect
+    const speed = (reduce ? 0.35 : 1.35) * (0.45 + depth * 0.8);
+    const ang = Math.random() * Math.PI * 2;
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: Math.cos(ang) * speed,
+      vy: Math.sin(ang) * speed,
+      depth,
+      r: 0.7 + depth * 1.9,                 // near nodes bigger
+      tw: Math.random() * Math.PI * 2,      // twinkle phase
+      twSpeed: 0.6 + Math.random() * 1.1
+    };
+  }
+
+  function init() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    linkDist = isMobile() ? 115 : 155;
+    nodes = [];
+    const n = nodeCount();
+    for (let i = 0; i < n; i++) nodes.push(makeNode());
+  }
+
+  let last = 0;
+  function frame(t) {
+    const dt = Math.min((t - last) || 16, 50) / 16;  // normalize to ~60fps
+    last = t;
+
+    // smooth parallax offset toward pointer
+    pointer.px += (pointer.x - pointer.px) * 0.05;
+    pointer.py += (pointer.y - pointer.py) * 0.05;
+    const par = pointer.active
+      ? { x: (pointer.px - W / 2) * 0.012, y: (pointer.py - H / 2) * 0.012 }
+      : { x: 0, y: 0 };
+
+    ctx.fillStyle = BG;
+    ctx.fillRect(0, 0, W, H);
+
+    // update positions
+    for (let i = 0; i < nodes.length; i++) {
+      const a = nodes[i];
+      a.x += a.vx * dt;
+      a.y += a.vy * dt;
+
+      // gentle attraction toward pointer (transient nudge, then renormalize so
+      // the node keeps its own constant drift speed — never slows to a halt)
+      if (pointer.active) {
+        const dx = pointer.x - a.x, dy = pointer.y - a.y;
+        const d2 = dx * dx + dy * dy;
+        if (d2 < 220 * 220 && d2 > 1) {
+          const f = (1 - Math.sqrt(d2) / 220) * 0.6 * a.depth;
+          const base = Math.hypot(a.vx, a.vy) || 1;
+          a.vx += dx * 0.002 * f * dt;
+          a.vy += dy * 0.002 * f * dt;
+          const sp = Math.hypot(a.vx, a.vy) || 1;
+          a.vx = a.vx / sp * base;
+          a.vy = a.vy / sp * base;
+        }
+      }
+
+      // wrap around edges
+      if (a.x < -20) a.x = W + 20; else if (a.x > W + 20) a.x = -20;
+      if (a.y < -20) a.y = H + 20; else if (a.y > H + 20) a.y = -20;
+
+      a.tw += 0.015 * a.twSpeed * dt;
+    }
+
+    // draw links (fade in/out by distance)
+    for (let i = 0; i < nodes.length; i++) {
+      const a = nodes[i];
+      const ax = a.x + par.x * (a.depth + 0.3) * 8;
+      const ay = a.y + par.y * (a.depth + 0.3) * 8;
+      for (let j = i + 1; j < nodes.length; j++) {
+        const b = nodes[j];
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < linkDist) {
+          const bx = b.x + par.x * (b.depth + 0.3) * 8;
+          const by = b.y + par.y * (b.depth + 0.3) * 8;
+          const alpha = (1 - dist / linkDist) * 0.5 * (0.4 + (a.depth + b.depth) / 2);
+          ctx.strokeStyle = 'rgba(0,207,255,' + alpha.toFixed(3) + ')';
+          ctx.lineWidth = 0.6;
+          ctx.beginPath();
+          ctx.moveTo(ax, ay);
+          ctx.lineTo(bx, by);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // draw nodes with glow + twinkle
+    for (let i = 0; i < nodes.length; i++) {
+      const a = nodes[i];
+      const ax = a.x + par.x * (a.depth + 0.3) * 8;
+      const ay = a.y + par.y * (a.depth + 0.3) * 8;
+      const twinkle = 0.55 + 0.45 * Math.sin(a.tw);
+      const alpha = (0.35 + a.depth * 0.5) * twinkle;
+      const rad = a.r * (0.9 + 0.15 * Math.sin(a.tw));
+
+      // glow
+      const g = ctx.createRadialGradient(ax, ay, 0, ax, ay, rad * 5);
+      g.addColorStop(0, 'rgba(0,207,255,' + (alpha * 0.55).toFixed(3) + ')');
+      g.addColorStop(1, 'rgba(0,207,255,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(ax, ay, rad * 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // core
+      ctx.fillStyle = 'rgba(120,235,255,' + alpha.toFixed(3) + ')';
+      ctx.beginPath();
+      ctx.arc(ax, ay, rad, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    raf = requestAnimationFrame(frame);
+  }
+
+  // pointer interaction
+  function setPointer(x, y) {
+    pointer.x = x; pointer.y = y; pointer.active = true;
+    if (pointer.px === 0 && pointer.py === 0) { pointer.px = x; pointer.py = y; }
+  }
+  window.addEventListener('mousemove', e => setPointer(e.clientX, e.clientY), { passive: true });
+  window.addEventListener('mouseleave', () => { pointer.active = false; });
+  window.addEventListener('touchmove', e => {
+    if (e.touches[0]) setPointer(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: true });
+  window.addEventListener('touchend', () => { pointer.active = false; });
+
+  // resize (debounced)
+  let rt;
+  window.addEventListener('resize', () => {
+    clearTimeout(rt);
+    rt = setTimeout(init, 200);
+  });
+
+  // pause when tab hidden (save CPU)
+  let raf = null;
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { cancelAnimationFrame(raf); raf = null; }
+    else if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
+  });
+
+  init();
+  raf = requestAnimationFrame(frame);
+})();
+</script>
+
+<!-- 3D-ФЕМИДА (Three.js, локальная копия) -->
+<script type="module" src="assets/js/themis.js"></script>
+</body>
+</html>

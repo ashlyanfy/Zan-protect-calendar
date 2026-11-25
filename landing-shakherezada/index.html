@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Шехерезада Куралбек — Юрист</title>
+<title>Шехерезада Куралбек: юрист, судебные споры и цифровое право | Алматы, Шымкент</title>
+<meta name="description" content="Юрист Шехерезада Куралбек. Судебные споры, цифровые активы, персональные данные, антифрод, корпоративное сопровождение, OSINT. Алматы, Шымкент и дистанционно по Казахстану.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -56,13 +57,13 @@ body::before{
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(2,10,18,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:500;display:flex;align-items:center}
-.nav-inner{max-width:var(--max);width:100%;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.nav-inner{max-width:1420px;width:100%;margin:0 auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between;gap:18px}
 .nav-logo{font-family:var(--font-h);font-size:16px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text);white-space:nowrap;display:flex;align-items:center;gap:10px}
 .nav-logo-dot{width:8px;height:8px;background:var(--cyan);border-radius:50%;box-shadow:0 0 10px var(--cyan);animation:pdot 2s ease-in-out infinite;flex-shrink:0}
 @keyframes pdot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.65)}}
 .nav-logo span{color:var(--cyan)}
-.nav-links{display:flex;gap:32px;list-style:none}
-.nav-links a{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);transition:color .25s;position:relative}
+.nav-links{display:flex;gap:22px;list-style:none}
+.nav-links a{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);transition:color .25s;position:relative;white-space:nowrap}
 .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--cyan);transform:scaleX(0);transition:transform .25s;transform-origin:left}
 .nav-links a:hover{color:var(--cyan)}
 .nav-links a:hover::after{transform:scaleX(1)}
@@ -198,7 +199,7 @@ section{padding:100px 0;position:relative;z-index:1}
 /* фон секций задаёт общий .shell */
 #services::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 0% 50%, rgba(0,180,220,.04) 0%, transparent 70%);pointer-events:none}
 .services-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:60px;gap:32px}
-.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border2);border:1px solid var(--border2);border-radius:var(--r);overflow:hidden}
+.services-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border2);border:1px solid var(--border2);border-radius:var(--r);overflow:hidden}
 .svc-card{background:var(--deep);padding:36px 32px;transition:background .3s,border-color .3s;position:relative;border:1px solid transparent}
 .svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan-dim),transparent);opacity:0;transition:opacity .3s}
 .svc-card:hover{background:var(--panel)}
@@ -211,14 +212,6 @@ section{padding:100px 0;position:relative;z-index:1}
 .svc-desc{font-size:14px;color:var(--text-dim);line-height:1.75;margin-bottom:24px;transition:color .3s}
 .svc-price{display:inline-block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);border:1px solid var(--border2);border-radius:20px;padding:4px 12px;margin-bottom:24px;transition:color .3s,border-color .3s}
 .svc-cta{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border);padding:8px 16px;border-radius:var(--r);color:var(--text-dim);transition:all .3s}
-
-/* ── 4. IMAGE BAND ── */
-#imgband{height:420px;position:relative;overflow:hidden;padding:0}
-.imgband-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,10,18,.9) 0%,rgba(2,10,18,.5) 60%,transparent 100%);display:flex;align-items:center}
-.imgband-text{max-width:540px;padding:0 40px}
-.imgband-text .section-eyebrow{color:var(--cyan)}
-.imgband-quote{font-family:var(--font-h);font-size:clamp(22px,2.8vw,36px);line-height:1.3;font-weight:700;margin:12px 0 24px;color:var(--text)}
-.imgband-quote span{color:var(--cyan)}
 
 /* ── 5. ADVANTAGES ── */
 
@@ -266,6 +259,32 @@ body.no-3d #hero{height:100svh}
 body.no-3d .hero-copy{opacity:1 !important;transform:none !important;pointer-events:auto !important}
 body.no-3d .hero-hint{display:none}
 
+/* ── СПИСКИ В КАРТОЧКАХ НАПРАВЛЕНИЙ ── */
+.svc-list{list-style:none;margin:0 0 22px;padding:0}
+.svc-list li{position:relative;padding:7px 0 7px 18px;font-size:14px;color:var(--text-dim);line-height:1.6;border-bottom:1px solid var(--border2);transition:color .3s}
+.svc-list li:last-child{border-bottom:none}
+.svc-list li::before{content:'▸';position:absolute;left:0;top:8px;color:var(--cyan);font-size:11px}
+.svc-list b{color:var(--text);font-weight:600}
+.svc-sub{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--cyan);margin:16px 0 6px;font-weight:600}
+
+/* ── КАК Я РАБОТАЮ ── */
+.process-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border2);border:1px solid var(--border2);border-radius:var(--r);overflow:hidden;margin-top:48px}
+.proc-step{background:rgba(5,15,26,.72);padding:28px 22px;position:relative;transition:background .3s}
+.proc-step:hover{background:var(--panel)}
+.proc-step::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan-dim),transparent);opacity:0;transition:opacity .3s}
+.proc-step:hover::before{opacity:1}
+.proc-num{font-family:var(--font-h);font-size:11px;color:var(--cyan);font-weight:700;letter-spacing:.1em;margin-bottom:16px}
+.proc-name{font-family:var(--font-h);font-size:17px;font-weight:700;margin-bottom:10px;color:var(--text)}
+.proc-text{font-size:13px;color:var(--text-dim);line-height:1.7}
+
+/* ── ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКОВ ── */
+.lang-switch{display:flex;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;flex-shrink:0}
+.lang-switch button{background:transparent;border:none;color:var(--text-dim);font-family:var(--font-b);font-size:11px;font-weight:700;letter-spacing:.06em;padding:8px 10px;cursor:pointer;transition:all .25s}
+.lang-switch button:hover{color:var(--cyan)}
+.lang-switch button.on{background:var(--cyan);color:var(--void)}
+.lang-switch-mobile{margin-bottom:18px;width:max-content}
+.lang-switch-mobile button{padding:10px 16px;font-size:13px}
+
 /* RESPONSIVE */
 @media(max-width:1024px){
   .wrap{padding:0 24px}
@@ -276,6 +295,7 @@ body.no-3d .hero-hint{display:none}
   .about-photo{justify-self:center;max-width:380px}
   .adv-img-box{aspect-ratio:16/7}
   .services-grid{grid-template-columns:1fr 1fr}
+  .process-grid{grid-template-columns:repeat(2,1fr)}
   .contacts-grid{grid-template-columns:1fr 1fr;gap:40px}
 }
 @media(max-width:768px){
@@ -308,6 +328,7 @@ body.no-3d .hero-hint{display:none}
   /* CONTENT */
   .about-grid,.adv-grid{gap:32px}
   .services-grid{grid-template-columns:1fr}
+  .process-grid{grid-template-columns:1fr}
   .services-top{flex-direction:column;align-items:flex-start;gap:20px;margin-bottom:40px}
   .services-top .btn{width:100%}
   .svc-card{padding:28px 24px}
@@ -317,9 +338,6 @@ body.no-3d .hero-hint{display:none}
   #cta{padding:80px 0}
   .cta-btns{flex-direction:column;align-items:center}
   .cta-btns .btn{width:100%;max-width:320px}
-  #imgband{height:280px}
-  .imgband-quote{font-size:20px}
-  .imgband-text{padding:0 20px}
 }
 @media(max-width:380px){
   .hero-title{font-size:30px}
@@ -341,20 +359,25 @@ body.no-3d .hero-hint{display:none}
   <div class="nav-inner">
     <a href="#" class="nav-logo">
       <div class="nav-logo-dot"></div>
-      Шехерезада <span>Куралбек</span>
+      Шехерезада <span>Құралбек</span>
     </a>
     <ul class="nav-links">
-      <li><a href="#about">Обо мне</a></li>
-      <li><a href="#services">Услуги</a></li>
-      <li><a href="#advantages">Преимущества</a></li>
-      <li><a href="#contacts">Контакты</a></li>
+      <li><a href="#about" data-i="nav.about">Обо мне</a></li>
+      <li><a href="#services" data-i="nav.services">Направления</a></li>
+      <li><a href="#advantages" data-i="nav.why">Почему я</a></li>
+      <li><a href="#contacts" data-i="nav.contacts">Контакты</a></li>
     </ul>
     <div class="nav-btns">
+      <div class="lang-switch" aria-label="Язык">
+        <button type="button" data-lang="ru">RU</button>
+        <button type="button" data-lang="kk">KZ</button>
+        <button type="button" data-lang="en">EN</button>
+      </div>
       <a href="tel:+77066183101" class="btn btn-ghost">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-2.89-7.85A2 2 0 0 1 4.68 3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 10.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17v-.08z"/></svg>
-        Позвонить
+        <span data-i="nav.call">Позвонить</span>
       </a>
-      <a href="https://wa.me/77066183101?text=Здравствуйте!%20Хочу%20получить%20консультацию." target="_blank" class="btn btn-cyan">Консультация</a>
+      <a href="https://wa.me/77066183101" target="_blank" class="btn btn-cyan" data-i="nav.wa">Написать в WhatsApp</a>
     </div>
     <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
   </div>
@@ -363,15 +386,19 @@ body.no-3d .hero-hint{display:none}
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
   <ul>
-    <li><a href="#about" class="mm-link">Обо мне</a></li>
-    <li><a href="#services" class="mm-link">Услуги</a></li>
-    <li><a href="#advantages" class="mm-link">Преимущества</a></li>
-    <li><a href="#contacts" class="mm-link">Контакты</a></li>
+    <li><a href="#about" class="mm-link" data-i="nav.about">Обо мне</a></li>
+    <li><a href="#services" class="mm-link" data-i="nav.services">Направления</a></li>
+    <li><a href="#advantages" class="mm-link" data-i="nav.why">Почему я</a></li>
+    <li><a href="#contacts" class="mm-link" data-i="nav.contacts">Контакты</a></li>
   </ul>
+  <div class="lang-switch lang-switch-mobile">
+    <button type="button" data-lang="ru">RU</button>
+    <button type="button" data-lang="kk">KZ</button>
+    <button type="button" data-lang="en">EN</button>
+  </div>
   <div class="mobile-btns">
-    <a href="tel:+77066183101" class="btn btn-ghost">Позвонить</a>
-    <a href="https://wa.me/77066183101" target="_blank" class="btn btn-wa">WhatsApp</a>
-    <a href="#cta" class="mm-link btn btn-cyan">Консультация</a>
+    <a href="tel:+77066183101" class="btn btn-ghost" data-i="nav.call">Позвонить</a>
+    <a href="https://wa.me/77066183101" target="_blank" class="btn btn-wa" data-i="nav.wa">Написать в WhatsApp</a>
   </div>
 </div>
 
@@ -380,25 +407,25 @@ body.no-3d .hero-hint{display:none}
   <div class="hero-sticky">
     <div class="wrap">
       <div class="hero-copy" id="heroCopy">
-        <p class="hero-eyebrow">Юрист · Алматы</p>
-        <h1 class="hero-title">Ваша защита<br><em>в руках профессионала</em></h1>
-        <p class="hero-sub">Специализируюсь на уголовном праве и правовой безопасности. Расскажите о ситуации — разберёмся вместе.</p>
+        <p class="hero-eyebrow" data-i="hero.eyebrow">Юрист · Алматы и Шымкент</p>
+        <h1 class="hero-title" data-i="hero.title">Судебные споры<br><em>и цифровое право</em></h1>
+        <p class="hero-sub" data-i="hero.sub">Представляю интересы в судах, работаю с цифровыми активами, персональными данными и антифродом, сопровождаю бизнес. В работе по делам использую OSINT.</p>
         <div class="hero-ctas">
-          <a href="https://wa.me/77066183101?text=Здравствуйте!%20Хочу%20получить%20консультацию." target="_blank" class="btn btn-cyan btn-lg">Получить консультацию</a>
+          <a href="https://wa.me/77066183101" target="_blank" class="btn btn-cyan btn-lg" data-i="hero.cta1">Обсудить ваш кейс</a>
           <a href="tel:+77066183101" class="btn btn-ghost btn-lg">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-2.89-7.85A2 2 0 0 1 4.68 3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 10.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17v-.08z"/></svg>
-            Позвонить
+            <span data-i="nav.call">Позвонить</span>
           </a>
         </div>
         <div class="hero-stats">
-          <div><div class="hstat-num">5+</div><div class="hstat-label">лет практики</div></div>
-          <div><div class="hstat-num">120+</div><div class="hstat-label">дел завершено</div></div>
-          <div><div class="hstat-num">100%</div><div class="hstat-label">конфиденциальность</div></div>
+          <div><div class="hstat-num" data-i="hero.s1n">2</div><div class="hstat-label" data-i="hero.s1l">офиса: Алматы и Шымкент</div></div>
+          <div><div class="hstat-num" data-i="hero.s2n">Вся РК</div><div class="hstat-label" data-i="hero.s2l">веду дела дистанционно</div></div>
+          <div><div class="hstat-num" data-i="hero.s3n">100%</div><div class="hstat-label" data-i="hero.s3l">приватно и конфиденциально</div></div>
         </div>
       </div>
     </div>
     <div class="hero-hint" id="heroHint">
-      Листайте
+      <span data-i="hero.hint">Листайте</span>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
     </div>
   </div>
@@ -410,170 +437,211 @@ body.no-3d .hero-hint{display:none}
 <section id="about">
   <div class="wrap">
     <div class="about-grid">
-            <div>
-        <p class="section-eyebrow r">Обо мне</p>
-        <h2 class="section-title r" style="transition-delay:.1s">Юрист, которому<br><em>можно доверять</em></h2>
+      <div>
+        <p class="section-eyebrow r" data-i="ab.eyebrow">Обо мне</p>
+        <h2 class="section-title r" style="transition-delay:.1s" data-i="ab.title">Юрист.<br><em>OSINT, суды, цифровое право</em></h2>
         <div class="rule r" style="transition-delay:.15s"></div>
-        <p class="about-text r" style="transition-delay:.2s">Меня зовут Шехерезада Куралбек. Я юрист с специализацией в уголовном праве и правовом обеспечении национальной безопасности. Работаю с частными клиентами и организациями по всему Казахстану.</p>
-        <p class="about-text r" style="transition-delay:.25s">Мой принцип — честность. Скажу прямо, что можно сделать в вашей ситуации, а не буду обнадёживать ради гонорара. Работаю на результат, а не на процесс.</p>
-        <p class="about-text r" style="transition-delay:.3s">За 5 лет практики завершила более 120 дел. Помогаю людям в по-настоящему трудные моменты жизни — когда цена ошибки слишком высока.</p>
-        <div class="r" style="transition-delay:.35s;margin-top:32px">
-          <a href="#services" class="btn btn-dark btn-lg">Мои услуги</a>
+        <p class="about-text r" style="transition-delay:.2s" data-i="ab.p1">Меня зовут Құралбек Шехерезада Жан-Айдарқызы. Я юрист, сооснователь и генеральный директор юридической компании ZAN PROTECT с офисами в Алматы и Шымкенте.</p>
+        <p class="about-text r" style="transition-delay:.25s" data-i="ab.p2">Моя основная специализация — судебные споры. Также занимаюсь цифровым правом и корпоративным сопровождением. В работе по делам использую OSINT — разведку по открытым источникам.</p>
+        <p class="about-text r" style="transition-delay:.3s" data-i="ab.p3">Училась в Москве: бакалавриат по уголовно-правовому профилю и магистратура по правовому обеспечению национальной безопасности. Практикую в Казахстане.</p>
+        <p class="about-text r" style="transition-delay:.35s" data-i="ab.p4">Активно занимаюсь повышением правовой грамотности: выступаю в университетах, перед предпринимателями и госслужащими, веду образовательный контент.</p>
+        <div class="r" style="transition-delay:.4s;margin-top:32px">
+          <a href="#services" class="btn btn-dark btn-lg" data-i="ab.btn">Чем я занимаюсь</a>
         </div>
       </div>
       <figure class="about-photo r" style="transition-delay:.2s">
         <div class="about-photo-frame">
-          <img src="images/portrait.jpg" alt="Шехерезада Куралбек — юрист">
+          <img src="images/portrait.jpg" alt="Құралбек Шехерезада — юрист">
           <span class="about-photo-line"></span>
         </div>
         <figcaption class="about-photo-card">
-          <div class="about-photo-name">Шехерезада Куралбек</div>
-          <div class="about-photo-role">Юрист по уголовным делам · Алматы</div>
+          <div class="about-photo-name">Құралбек Шехерезада</div>
+          <div class="about-photo-role" data-i="ab.phrole">Юрист · Судебные споры и цифровое право</div>
         </figcaption>
       </figure>
     </div>
   </div>
 </section>
 
-<!-- 3. УСЛУГИ -->
+<!-- 3. НАПРАВЛЕНИЯ -->
 <section id="services">
   <div class="wrap">
     <div class="services-top">
       <div>
-        <p class="section-eyebrow r">Услуги</p>
-        <h2 class="section-title r" style="transition-delay:.1s">Чем я<br><em>могу помочь</em></h2>
+        <p class="section-eyebrow r" data-i="sv.eyebrow">Направления</p>
+        <h2 class="section-title r" style="transition-delay:.1s" data-i="sv.title">Чем я<br><em>могу помочь</em></h2>
       </div>
-      <a href="https://wa.me/77066183101?text=Здравствуйте!%20Хочу%20задать%20вопрос." target="_blank" class="btn btn-cyan r" style="transition-delay:.2s">Задать вопрос</a>
+      <a href="https://wa.me/77066183101" target="_blank" class="btn btn-cyan r" style="transition-delay:.2s" data-i="sv.ask">Задать вопрос</a>
     </div>
     <div class="services-grid">
       <div class="svc-card r" style="transition-delay:.1s">
         <div class="svc-num">// 01</div>
-        <div class="svc-name">Защита по уголовным делам</div>
-        <p class="svc-desc">Представляю интересы подозреваемых, обвиняемых и подсудимых. Работаю с делами любой сложности — от первого допроса до апелляции.</p>
-        <div class="svc-price">от 50 000 ₸</div><br>
-        <a href="https://wa.me/77066183101?text=Нужна%20защита%20по%20уголовному%20делу" target="_blank" class="svc-cta">Подробнее →</a>
+        <div class="svc-name" data-i="sv.c1name">Судебные споры</div>
+        <div class="svc-body" data-i="sv.c1body">
+          <p class="svc-desc">Представляю интересы в судах по всему Казахстану — от претензии до решения.</p>
+          <ul class="svc-list">
+            <li>Имущественные споры</li>
+            <li>Взыскание долгов и убытков</li>
+            <li>Корпоративные споры</li>
+            <li>Трансграничные споры с иностранными участниками</li>
+            <li>Споры с государственными органами по АППК РК</li>
+          </ul>
+        </div>
+        <a href="https://wa.me/77066183101" target="_blank" class="svc-cta"><span data-i="sv.cta">Обсудить</span> →</a>
       </div>
       <div class="svc-card r" style="transition-delay:.15s">
         <div class="svc-num">// 02</div>
-        <div class="svc-name">Правовая безопасность бизнеса</div>
-        <p class="svc-desc">Оцениваю уголовные риски для предпринимателей, помогаю выстроить защиту до возбуждения дела. Профилактика лучше последствий.</p>
-        <div class="svc-price">от 40 000 ₸</div><br>
-        <a href="https://wa.me/77066183101?text=Нужна%20правовая%20безопасность%20бизнеса" target="_blank" class="svc-cta">Подробнее →</a>
+        <div class="svc-name" data-i="sv.c2name">Цифровое право</div>
+        <div class="svc-body" data-i="sv.c2body">
+          <ul class="svc-list">
+            <li><b>Цифровые преступления:</b> правовая оценка, заявления, сопровождение по делу</li>
+            <li><b>Цифровые активы:</b> криптовалюта, P2P-сделки, споры и возврат средств</li>
+            <li><b>Персональные данные:</b> незаконное распространение, требования к бизнесу</li>
+            <li><b>Антифрод:</b> блокировки счетов и карт, снятие ограничений</li>
+          </ul>
+        </div>
+        <a href="https://wa.me/77066183101" target="_blank" class="svc-cta"><span data-i="sv.cta">Обсудить</span> →</a>
       </div>
       <div class="svc-card r" style="transition-delay:.2s">
         <div class="svc-num">// 03</div>
-        <div class="svc-name">Гражданские споры</div>
-        <p class="svc-desc">Представляю интересы в суде по имущественным, долговым и договорным спорам. От составления иска до исполнения решения.</p>
-        <div class="svc-price">от 25 000 ₸</div><br>
-        <a href="https://wa.me/77066183101?text=Гражданский%20спор" target="_blank" class="svc-cta">Подробнее →</a>
+        <div class="svc-name" data-i="sv.c3name">Корпоративное сопровождение</div>
+        <div class="svc-body" data-i="sv.c3body">
+          <p class="svc-desc">Договоры, претензионная работа, изменения в ТОО и ИП, сопровождение IT-компаний, абонентское обслуживание.</p>
+        </div>
+        <a href="https://wa.me/77066183101" target="_blank" class="svc-cta"><span data-i="sv.cta">Обсудить</span> →</a>
       </div>
       <div class="svc-card r" style="transition-delay:.25s">
         <div class="svc-num">// 04</div>
-        <div class="svc-name">Семейные споры</div>
-        <p class="svc-desc">Раздел имущества, алименты, определение места жительства детей. Помогу пройти через это с минимальными потерями.</p>
-        <div class="svc-price">от 30 000 ₸</div><br>
-        <a href="https://wa.me/77066183101?text=Семейный%20спор" target="_blank" class="svc-cta">Подробнее →</a>
-      </div>
-      <div class="svc-card r" style="transition-delay:.3s">
-        <div class="svc-num">// 05</div>
-        <div class="svc-name">Консультации онлайн</div>
-        <p class="svc-desc">Не можете приехать лично? Проконсультирую дистанционно — по телефону, видеосвязи или в WhatsApp. Быстро и по делу.</p>
-        <div class="svc-price">от 10 000 ₸</div><br>
-        <a href="https://wa.me/77066183101?text=Хочу%20онлайн%20консультацию" target="_blank" class="svc-cta">Подробнее →</a>
-      </div>
-      <div class="svc-card r" style="transition-delay:.35s">
-        <div class="svc-num">// 06</div>
-        <div class="svc-name">Взыскание долгов</div>
-        <p class="svc-desc">Взыщу задолженность через суд с физических лиц и организаций — от подачи иска до фактического получения денег.</p>
-        <div class="svc-price">% от суммы</div><br>
-        <a href="https://wa.me/77066183101?text=Взыскание%20долга" target="_blank" class="svc-cta">Подробнее →</a>
+        <div class="svc-name">OSINT</div>
+        <div class="svc-body" data-i="sv.c4body">
+          <p class="svc-desc">Разведка по открытым источникам. Использую её в работе по делам клиентов. Только законные методы.</p>
+          <div class="svc-sub">Для частных клиентов</div>
+          <ul class="svc-list">
+            <li>Проверка человека, продавца или подрядчика до сделки</li>
+            <li>Поиск должника и его имущества</li>
+            <li>Сбор доказательств для суда</li>
+          </ul>
+          <div class="svc-sub">Для бизнеса</div>
+          <ul class="svc-list">
+            <li>Проверка контрагентов и партнёров до подписания договора</li>
+            <li>Поиск активов должника перед взысканием</li>
+            <li>Аудит цифрового следа компании и руководителей</li>
+          </ul>
+        </div>
+        <a href="https://wa.me/77066183101" target="_blank" class="svc-cta"><span data-i="sv.cta">Обсудить</span> →</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 4. IMAGE BAND -->
-<section id="imgband">
-  <img src="images/img3.webp" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" alt="">
-  <div class="imgband-overlay">
-    <div class="imgband-text">
-      <p class="section-eyebrow">Мой подход</p>
-      <p class="imgband-quote">«Когда на кону свобода или справедливость — <span>важно, кто стоит рядом</span>»</p>
-      <a href="#cta" class="btn btn-cyan btn-lg">Первая консультация бесплатно</a>
+<!-- 4. КАК Я РАБОТАЮ -->
+<section id="process">
+  <div class="wrap">
+    <p class="section-eyebrow r" data-i="pr.eyebrow">Как я работаю</p>
+    <h2 class="section-title r" style="transition-delay:.1s" data-i="pr.title">Порядок<br><em>работы</em></h2>
+    <div class="process-grid">
+      <div class="proc-step r" style="transition-delay:.15s">
+        <div class="proc-num">01</div>
+        <div class="proc-name" data-i="pr.s1t">Изучение</div>
+        <p class="proc-text" data-i="pr.s1x">Вы рассказываете ситуацию и присылаете документы. Изучаю всё, что есть по делу.</p>
+      </div>
+      <div class="proc-step r" style="transition-delay:.2s">
+        <div class="proc-num">02</div>
+        <div class="proc-name" data-i="pr.s2t">Анализ</div>
+        <p class="proc-text" data-i="pr.s2x">Проверяю факты, доказательства, сроки и слабые места позиции.</p>
+      </div>
+      <div class="proc-step r" style="transition-delay:.25s">
+        <div class="proc-num">03</div>
+        <div class="proc-name" data-i="pr.s3t">Квалификация</div>
+        <p class="proc-text" data-i="pr.s3x">Определяю, что это с точки зрения закона и какие нормы здесь работают.</p>
+      </div>
+      <div class="proc-step r" style="transition-delay:.3s">
+        <div class="proc-num">04</div>
+        <div class="proc-name" data-i="pr.s4t">Варианты</div>
+        <p class="proc-text" data-i="pr.s4x">Объясняю возможные сценарии развития событий и риски каждого.</p>
+      </div>
+      <div class="proc-step r" style="transition-delay:.35s">
+        <div class="proc-num">05</div>
+        <div class="proc-name" data-i="pr.s5t">Работа</div>
+        <p class="proc-text" data-i="pr.s5x">Только после этого беру дело в работу.</p>
+      </div>
+    </div>
+    <div class="r" style="transition-delay:.35s;margin-top:40px">
+      <a href="https://wa.me/77066183101" target="_blank" class="btn btn-cyan btn-lg" data-i="hero.cta1">Обсудить ваш кейс</a>
     </div>
   </div>
 </section>
 
-<!-- 5. ПРЕИМУЩЕСТВА -->
+<!-- 5. ПОЧЕМУ Я -->
 <section id="advantages">
   <div class="wrap">
     <div class="adv-grid">
       <div>
-        <p class="section-eyebrow r">Почему я</p>
-        <h2 class="section-title r" style="transition-delay:.1s">Причины<br><em>выбрать меня</em></h2>
+        <p class="section-eyebrow r" data-i="why.eyebrow">Почему я</p>
+        <h2 class="section-title r" style="transition-delay:.1s" data-i="why.title">Что<br><em>важно знать</em></h2>
         <div class="rule r" style="transition-delay:.15s"></div>
         <div class="adv-item r" style="transition-delay:.2s">
           <div class="adv-n">01</div>
-          <div><div class="adv-title">Редкая специализация — уголовное право и нацбезопасность</div><p class="adv-text">Мало юристов работают на стыке уголовного права и правового обеспечения национальной безопасности. Это узкая и востребованная экспертиза.</p></div>
+          <div><div class="adv-title" data-i="why.i1t">OSINT в работе по делу</div><p class="adv-text" data-i="why.i1x">Использую разведку по открытым источникам: нахожу информацию и превращаю её в доказательства для суда.</p></div>
         </div>
         <div class="adv-item r" style="transition-delay:.25s">
           <div class="adv-n">02</div>
-          <div><div class="adv-title">120+ завершённых дел за 5 лет</div><p class="adv-text">Реальный опыт, а не красивые слова. Клиенты возвращаются и рекомендуют меня близким — это лучшая оценка работы.</p></div>
+          <div><div class="adv-title" data-i="why.i2t">Работаю по всему Казахстану</div><p class="adv-text" data-i="why.i2x">Офисы в Алматы и Шымкенте. Суды в других городах веду дистанционно.</p></div>
         </div>
         <div class="adv-item r" style="transition-delay:.3s">
           <div class="adv-n">03</div>
-          <div><div class="adv-title">Отвечаю в течение часа</div><p class="adv-text">Напишите в WhatsApp или Instagram — отвечу быстро, без воды и отписок. Ценю ваше время.</p></div>
+          <div><div class="adv-title" data-i="why.i3t">Команда ZAN PROTECT</div><p class="adv-text" data-i="why.i3x">Юристы по судебным, корпоративным и цифровым вопросам.</p></div>
         </div>
         <div class="adv-item r" style="transition-delay:.35s">
           <div class="adv-n">04</div>
-          <div><div class="adv-title">Полная конфиденциальность</div><p class="adv-text">Всё, что вы мне рассказываете, остаётся между нами. Профессиональная тайна — это не просто слова, это основа доверия.</p></div>
+          <div><div class="adv-title" data-i="why.i4t">Повышаю правовую грамотность</div><p class="adv-text" data-i="why.i4x">Выступаю в КазНУ и Университете Кунаева, читаю лекции для предпринимателей и госслужащих.</p></div>
         </div>
         <div class="adv-item r" style="transition-delay:.4s">
           <div class="adv-n">05</div>
-          <div><div class="adv-title">Первая консультация — бесплатно</div><p class="adv-text">Расскажите о ситуации. Дам честную оценку и объясню, что реально можно сделать — без обязательств и давления.</p></div>
+          <div><div class="adv-title" data-i="why.i5t">Конфиденциальность</div><p class="adv-text" data-i="why.i5x">Всё приватно и конфиденциально.</p></div>
         </div>
       </div>
       <div class="r" style="transition-delay:.2s">
         <div class="adv-img-box">
-          <img src="images/img4.webp" style="width:100%;height:100%;object-fit:cover" alt="Юрист">
+          <img src="images/img4.webp" style="width:100%;height:100%;object-fit:cover" alt="Цифровое право">
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 7. CTA -->
+<!-- 6. ПРИЗЫВ К ДЕЙСТВИЮ -->
 <section id="cta">
   <div class="wrap">
-    <p class="section-eyebrow r" style="justify-content:center">Начните сейчас</p>
-    <h2 class="section-title r" style="transition-delay:.1s">Получите консультацию<br><em>уже сегодня</em></h2>
+    <p class="section-eyebrow r" style="justify-content:center" data-i="cta.eyebrow">Связаться</p>
+    <h2 class="section-title r" style="transition-delay:.1s" data-i="cta.title">Обсудить<br><em>ваш кейс</em></h2>
     <div class="rule r" style="transition-delay:.15s"></div>
-    <p class="cta-sub r" style="transition-delay:.2s">Первая консультация — бесплатно.<br>Расскажите о ситуации — найдём решение вместе.</p>
+    <p class="cta-sub r" style="transition-delay:.2s" data-i="cta.sub">Напишите в WhatsApp или Direct. Опишите ситуацию и приложите документы.</p>
     <div class="cta-btns r" style="transition-delay:.3s">
-      <a href="https://wa.me/77066183101?text=Здравствуйте!%20Хочу%20записаться%20на%20бесплатную%20консультацию." target="_blank" class="btn btn-wa btn-lg">
+      <a href="https://wa.me/77066183101" target="_blank" class="btn btn-wa btn-lg">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-        Написать в WhatsApp
+        <span data-i="nav.wa">Написать в WhatsApp</span>
       </a>
-      <a href="tel:+77066183101" class="btn btn-ghost btn-lg">Позвонить</a>
+      <a href="tel:+77066183101" class="btn btn-ghost btn-lg" data-i="nav.call">Позвонить</a>
       <a href="https://instagram.com/shekherezada.kuralbek" target="_blank" class="btn btn-outline-w btn-lg">Instagram</a>
     </div>
   </div>
 </section>
 
-<!-- 8. КОНТАКТЫ -->
+<!-- 7. КОНТАКТЫ -->
 <section id="contacts">
   <div class="wrap">
     <div class="contacts-grid">
       <div>
-        <div class="contact-brand">Шехерезада <span>Куралбек</span></div>
-        <p class="contact-desc">Юрист по уголовным делам и правовой безопасности. Работаю в Алматы и дистанционно по всему Казахстану.</p>
+        <div class="contact-brand">Шехерезада <span>Құралбек</span></div>
+        <p class="contact-desc" data-i="ct.desc">Юрист. Судебные споры и цифровое право. Офисы в Алматы и Шымкенте, дистанционно по всему Казахстану.</p>
         <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <a href="tel:+77066183101" class="btn btn-dark">Позвонить</a>
+          <a href="tel:+77066183101" class="btn btn-dark" data-i="nav.call">Позвонить</a>
           <a href="https://wa.me/77066183101" target="_blank" class="btn btn-wa">WhatsApp</a>
         </div>
       </div>
       <div class="contact-col">
-        <div class="contact-col-title">Контакты</div>
+        <div class="contact-col-title" data-i="ct.colC">Контакты</div>
         <ul>
           <li>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-2.89-7.85A2 2 0 0 1 4.68 3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 10.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17v-.08z"/></svg>
@@ -590,26 +658,26 @@ body.no-3d .hero-hint{display:none}
         </ul>
       </div>
       <div class="contact-col">
-        <div class="contact-col-title">Режим работы</div>
+        <div class="contact-col-title" data-i="ct.colH">Режим работы</div>
         <ul>
           <li>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Алматы, Казахстан
+            <span data-i="ct.cities">Алматы и Шымкент · дистанционно по всей РК</span>
           </li>
           <li>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Пн–Пт: 9:00–19:00
+            <span data-i="ct.h1">Пн–Пт: 9:00–19:00</span>
           </li>
           <li>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Сб: 10:00–15:00
+            <span data-i="ct.h2">Сб: 10:00–15:00</span>
           </li>
         </ul>
       </div>
     </div>
     <div class="footer-bar">
-      <div class="footer-copy">© 2025 Шехерезада Куралбек. Все права защищены.</div>
-      <div class="footer-copy">Алматы, Казахстан</div>
+      <div class="footer-copy" data-i="ft.l1">Құралбек Шехерезада Жан-Айдарқызы. Юрист. Судебные споры и цифровое право. Сооснователь ZAN PROTECT.</div>
+      <div class="footer-copy" data-i="ft.l2">© 2026 Құралбек Шехерезада Жан-Айдарқызы. Все права защищены.</div>
     </div>
   </div>
 </section>
@@ -842,6 +910,9 @@ document.querySelectorAll('.mm-link').forEach(l => l.addEventListener('click', (
   raf = requestAnimationFrame(frame);
 })();
 </script>
+
+<!-- Переключение языков RU/KK/EN -->
+<script src="assets/js/i18n.js"></script>
 
 <!-- 3D-ФЕМИДА (Three.js, локальная копия) -->
 <script type="module" src="assets/js/themis.js"></script>

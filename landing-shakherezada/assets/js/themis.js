@@ -35,8 +35,8 @@ const ANCHORS = [
   { sel: '#about',      at: 0.45, dist: 2.4, camY: 2.45, lookY: 2.4,  x: 0.9,   spin: 0.25 },
   // «Услуги»: весы крупным планом
   { sel: '#services',   at: 0.4,  dist: 2.9, camY: 2.05, lookY: 2.05, x: 0.9,   spin: -2.35 },
-  // фотолента: широкий переходный план
-  { sel: '#imgband',    at: 0.5,  dist: 5.8, camY: 1.9,  lookY: 1.55, x: 0,     spin: -3.3 },
+  // «Как я работаю»: широкий переходный план
+  { sel: '#process',    at: 0.5,  dist: 5.8, camY: 1.9,  lookY: 1.55, x: 0,     spin: -3.3 },
   // «Преимущества»: сторона с мечом
   { sel: '#advantages', at: 0.45, dist: 2.8, camY: 1.45, lookY: 1.5,  x: -0.55, spin: -4.6 },
   // CTA: отъезд, статуя в полный рост, камера сверху

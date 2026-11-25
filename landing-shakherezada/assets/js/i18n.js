@@ -134,6 +134,8 @@
 
       'ft.l1': `Құралбек Шехерезада Жан-Айдарқызы. Заңгер. Сот даулары және цифрлық құқық. ZAN PROTECT тең құрылтайшысы.`,
       'ft.l2': `© 2026 Құралбек Шехерезада Жан-Айдарқызы. Барлық құқықтар қорғалған.`,
+      'ft.privacy': `Құпиялылық саясаты`,
+      'ft.terms': `Сайтты пайдалану шарттары`,
     },
 
     en: {
@@ -241,6 +243,8 @@
 
       'ft.l1': `Kuralbek Shekherezada Zhan-Aidarkyzy. Lawyer. Litigation and digital law. Co-founder of ZAN PROTECT.`,
       'ft.l2': `© 2026 Kuralbek Shekherezada Zhan-Aidarkyzy. All rights reserved.`,
+      'ft.privacy': `Privacy policy (KZ/RU)`,
+      'ft.terms': `Terms of use (KZ/RU)`,
     },
   };
 

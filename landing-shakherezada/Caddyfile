@@ -2,6 +2,10 @@
 	root * /srv
 	encode zstd gzip
 
+	# служебные файлы не отдаём
+	@private path /Dockerfile /Caddyfile /README.md /seo-keywords.md
+	respond @private 404
+
 	# библиотеки и 3D-модель меняются редко — кэшируем надолго
 	@assets path /assets/*
 	header @assets Cache-Control "public, max-age=2592000"

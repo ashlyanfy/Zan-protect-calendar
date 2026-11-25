@@ -45,7 +45,7 @@
       'hero.sub': `Соттарда мүдделерді қорғаймын, цифрлық активтермен, дербес деректермен және антифродпен жұмыс істеймін, бизнесті сүйемелдеймін. Істер бойынша жұмыста OSINT қолданамын.`,
       'hero.cta1': `Кейсіңізді талқылау`,
       'hero.s1n': `2`, 'hero.s1l': `кеңсе: Алматы және Шымкент`,
-      'hero.s2n': `Қазақстан`, 'hero.s2l': `істерді бүкіл Қазақстан Республикасы бойынша қашықтан жүргіземін`,
+      'hero.s2n': `Қазақстан Республикасы`, 'hero.s2l': `елдің бүкіл аумағында жұмыс істеймін`,
       'hero.s3n': `100%`, 'hero.s3l': `жеке әрі құпия`,
       'hero.hint': `Парақтаңыз`,
 
@@ -154,7 +154,7 @@
       'hero.sub': `I represent clients in court, work with digital assets, personal data and anti-fraud, and support businesses. I use OSINT in my casework.`,
       'hero.cta1': `Discuss your case`,
       'hero.s1n': `2`, 'hero.s1l': `offices: Almaty & Shymkent`,
-      'hero.s2n': `Kazakhstan`, 'hero.s2l': `cases handled remotely across the Republic of Kazakhstan`,
+      'hero.s2n': `Republic of Kazakhstan`, 'hero.s2l': `working across the whole country`,
       'hero.s3n': `100%`, 'hero.s3l': `private & confidential`,
       'hero.hint': `Scroll`,
 

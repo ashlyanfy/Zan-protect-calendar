@@ -17,14 +17,17 @@
     ru: {
       title: `Шехерезада Куралбек: юрист, судебные споры и цифровое право | Алматы, Шымкент`,
       desc: `Юрист Шехерезада Куралбек. Судебные споры, цифровые активы, персональные данные, антифрод, корпоративное сопровождение, OSINT. Алматы, Шымкент и дистанционно по Казахстану.`,
+      kw: `юрист Алматы, юрист Шымкент, адвокат Алматы, судебные споры, взыскание долгов, цифровое право, юрист по криптовалюте, антифрод, персональные данные, OSINT, осинт, проверка контрагента, корпоративный юрист, Шехерезада Куралбек, Шахерезада Куралбек, ZAN PROTECT, юрист Казахстан`,
     },
     kk: {
       title: `Шехерезада Құралбек: заңгер, сот даулары және цифрлық құқық | Алматы, Шымкент`,
       desc: `Заңгер Шехерезада Құралбек. Сот даулары, цифрлық активтер, дербес деректер, антифрод, корпоративтік сүйемелдеу, OSINT. Алматы, Шымкент және бүкіл Қазақстан бойынша қашықтан.`,
+      kw: `заңгер алматы, заңгер шымкент, сот даулары, қарызды өндіріп алу, цифрлық құқық, криптовалюта заңгер, дербес деректер, антифрод, osint, контрагентті тексеру, борышкерді іздеу, бизнес заңгері, Шехерезада Құралбек, zan protect, заңгер қазақстан`,
     },
     en: {
       title: `Shekherezada Kuralbek — Lawyer: Litigation & Digital Law | Almaty, Shymkent`,
       desc: `Lawyer Shekherezada Kuralbek. Litigation, digital assets, personal data, anti-fraud, corporate support, OSINT. Almaty, Shymkent and remotely across Kazakhstan.`,
+      kw: `lawyer almaty, lawyer shymkent, litigation kazakhstan, debt recovery, digital law, crypto lawyer kazakhstan, data protection, anti-fraud, osint lawyer, due diligence kazakhstan, corporate counsel, Shekherezada Kuralbek, ZAN PROTECT`,
     },
   };
 
@@ -42,7 +45,7 @@
       'hero.sub': `Соттарда мүдделерді қорғаймын, цифрлық активтермен, дербес деректермен және антифродпен жұмыс істеймін, бизнесті сүйемелдеймін. Істер бойынша жұмыста OSINT қолданамын.`,
       'hero.cta1': `Кейсіңізді талқылау`,
       'hero.s1n': `2`, 'hero.s1l': `кеңсе: Алматы және Шымкент`,
-      'hero.s2n': `Бүкіл ҚР`, 'hero.s2l': `істерді қашықтан жүргіземін`,
+      'hero.s2n': `Қазақстан`, 'hero.s2l': `істерді бүкіл Қазақстан Республикасы бойынша қашықтан жүргіземін`,
       'hero.s3n': `100%`, 'hero.s3l': `жеке әрі құпия`,
       'hero.hint': `Парақтаңыз`,
 
@@ -151,7 +154,7 @@
       'hero.sub': `I represent clients in court, work with digital assets, personal data and anti-fraud, and support businesses. I use OSINT in my casework.`,
       'hero.cta1': `Discuss your case`,
       'hero.s1n': `2`, 'hero.s1l': `offices: Almaty & Shymkent`,
-      'hero.s2n': `All KZ`, 'hero.s2l': `cases handled remotely`,
+      'hero.s2n': `Kazakhstan`, 'hero.s2l': `cases handled remotely across the Republic of Kazakhstan`,
       'hero.s3n': `100%`, 'hero.s3l': `private & confidential`,
       'hero.hint': `Scroll`,
 
@@ -267,6 +270,12 @@
     document.title = META[lang].title;
     const meta = document.querySelector('meta[name="description"]');
     if (meta) meta.content = META[lang].desc;
+    const kw = document.querySelector('meta[name="keywords"]');
+    if (kw && META[lang].kw) kw.content = META[lang].kw;
+    const ogT = document.querySelector('meta[property="og:title"]');
+    if (ogT) ogT.content = META[lang].title;
+    const ogD = document.querySelector('meta[property="og:description"]');
+    if (ogD) ogD.content = META[lang].desc;
     document.querySelectorAll('a[href*="wa.me"]').forEach(a => {
       a.href = 'https://wa.me/' + WA_PHONE + '?text=' + encodeURIComponent(WA_MSG[lang]);
     });

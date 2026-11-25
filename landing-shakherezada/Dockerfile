@@ -3,5 +3,5 @@
 FROM caddy:2-alpine
 WORKDIR /srv
 COPY . /srv
-RUN rm -f /srv/Dockerfile /srv/README.md
-CMD ["sh", "-c", "caddy file-server --root /srv --listen :${PORT:-8080}"]
+RUN rm -f /srv/Dockerfile /srv/README.md && mv /srv/Caddyfile /etc/caddy/Caddyfile
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]

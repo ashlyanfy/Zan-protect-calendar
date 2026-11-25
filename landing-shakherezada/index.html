@@ -7,6 +7,13 @@
 <meta name="description" content="Юрист Шехерезада Куралбек. Судебные споры, цифровые активы, персональные данные, антифрод, корпоративное сопровождение, OSINT. Алматы, Шымкент и дистанционно по Казахстану.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Exo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+<!-- ранний старт загрузки 3D: модель и модули качаются параллельно с парсингом -->
+<link rel="preload" href="assets/models/themis.glb" as="fetch">
+<link rel="modulepreload" href="assets/vendor/three.module.min.js">
+<link rel="modulepreload" href="assets/vendor/GLTFLoader.js">
+<link rel="modulepreload" href="assets/vendor/BufferGeometryUtils.js">
+<link rel="modulepreload" href="assets/vendor/meshopt_decoder.module.js">
+<link rel="modulepreload" href="assets/js/themis.js">
 <style>
 :root {
   --void:     #020a12;

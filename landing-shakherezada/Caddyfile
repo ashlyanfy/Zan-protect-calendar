@@ -1,0 +1,13 @@
+:{$PORT:-8080} {
+	root * /srv
+	encode zstd gzip
+
+	# библиотеки и 3D-модель меняются редко — кэшируем надолго
+	@assets path /assets/*
+	header @assets Cache-Control "public, max-age=2592000"
+
+	@images path /images/*
+	header @images Cache-Control "public, max-age=604800"
+
+	file_server
+}

@@ -41,6 +41,9 @@
   }
 }
 </script>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Exo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
 <!-- ранний старт загрузки 3D: модель и модули качаются параллельно с парсингом -->
@@ -364,10 +367,11 @@ body.no-3d .hero-hint{display:none}
   .hero-sub{font-size:15px;margin-bottom:28px;max-width:100%}
   .hero-ctas{gap:10px;margin-bottom:36px}
   .hero-ctas .btn{flex:1 1 100%;width:100%;padding:14px 18px}
-  .hero-stats{gap:0;flex-wrap:nowrap;justify-content:space-between;padding-top:28px}
-  .hero-stats > div{flex:1;text-align:center}
-  .hstat-num{font-size:22px}
-  .hstat-label{font-size:10px;letter-spacing:.02em}
+  /* счётчики: на телефоне вертикальный список, цифра + подпись в строку */
+  .hero-stats{flex-direction:column;gap:12px;padding-top:24px}
+  .hero-stats > div{display:flex;align-items:baseline;gap:12px;text-align:left}
+  .hstat-num{font-size:17px;white-space:nowrap;flex-shrink:0;margin-bottom:0}
+  .hstat-label{font-size:12px;letter-spacing:.02em}
   .hero-hint{bottom:40px}
 
   /* CONTENT */
@@ -386,8 +390,8 @@ body.no-3d .hero-hint{display:none}
 }
 @media(max-width:380px){
   .hero-title{font-size:30px}
-  .hstat-num{font-size:19px}
-  .hstat-label{font-size:9px}
+  .hstat-num{font-size:15px}
+  .hstat-label{font-size:11px}
 }
 </style>
 </head>

@@ -260,7 +260,7 @@ section{padding:100px 0;position:relative;z-index:1}
 /* ── 5. ADVANTAGES ── */
 
 .adv-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
-.adv-item{display:flex;align-items:flex-start;gap:20px;padding:24px 0;border-bottom:1px solid var(--border2)}
+.adv-item{display:block;padding:24px 0;border-bottom:1px solid var(--border2)}
 .adv-item:first-child{border-top:1px solid var(--border2)}
 .adv-n{font-family:var(--font-h);font-size:11px;color:var(--cyan);min-width:24px;padding-top:3px;font-weight:700;letter-spacing:.08em}
 .adv-title{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--text)}
@@ -367,11 +367,11 @@ body.no-3d .hero-hint{display:none}
   .hero-sub{font-size:15px;margin-bottom:28px;max-width:100%}
   .hero-ctas{gap:10px;margin-bottom:36px}
   .hero-ctas .btn{flex:1 1 100%;width:100%;padding:14px 18px}
-  /* счётчики: на телефоне вертикальный список, цифра + подпись в строку */
-  .hero-stats{flex-direction:column;gap:12px;padding-top:24px}
-  .hero-stats > div{display:flex;align-items:baseline;gap:12px;text-align:left}
-  .hstat-num{font-size:17px;white-space:nowrap;flex-shrink:0;margin-bottom:0}
-  .hstat-label{font-size:12px;letter-spacing:.02em}
+  /* счётчики: на телефоне простой вертикальный список */
+  .hero-stats{flex-direction:column;gap:16px;padding-top:24px}
+  .hero-stats > div{text-align:left}
+  .hstat-num{font-size:18px;margin-bottom:3px}
+  .hstat-label{font-size:12px;letter-spacing:.03em;max-width:100%}
   .hero-hint{bottom:40px}
 
   /* CONTENT */
@@ -524,7 +524,6 @@ body.no-3d .hero-hint{display:none}
     </div>
     <div class="services-grid">
       <div class="svc-card r" style="transition-delay:.1s">
-        <div class="svc-num">01</div>
         <div class="svc-name" data-i="sv.c1name">Судебные споры</div>
         <div class="svc-body" data-i="sv.c1body">
           <p class="svc-desc">Представляю интересы в судах по всему Казахстану — от претензии до решения.</p>
@@ -539,7 +538,6 @@ body.no-3d .hero-hint{display:none}
         <a href="https://wa.me/77066183101" target="_blank" class="svc-cta"><span data-i="sv.cta">Обсудить</span> →</a>
       </div>
       <div class="svc-card r" style="transition-delay:.15s">
-        <div class="svc-num">02</div>
         <div class="svc-name" data-i="sv.c2name">Цифровое право</div>
         <div class="svc-body" data-i="sv.c2body">
           <ul class="svc-list">
@@ -552,7 +550,6 @@ body.no-3d .hero-hint{display:none}
         <a href="https://wa.me/77066183101" target="_blank" class="svc-cta"><span data-i="sv.cta">Обсудить</span> →</a>
       </div>
       <div class="svc-card r" style="transition-delay:.2s">
-        <div class="svc-num">03</div>
         <div class="svc-name" data-i="sv.c3name">Корпоративное сопровождение</div>
         <div class="svc-body" data-i="sv.c3body">
           <p class="svc-desc">Договоры, претензионная работа, изменения в ТОО и ИП, сопровождение IT-компаний, абонентское обслуживание.</p>
@@ -560,7 +557,6 @@ body.no-3d .hero-hint{display:none}
         <a href="https://wa.me/77066183101" target="_blank" class="svc-cta"><span data-i="sv.cta">Обсудить</span> →</a>
       </div>
       <div class="svc-card r" style="transition-delay:.25s">
-        <div class="svc-num">04</div>
         <div class="svc-name">OSINT</div>
         <div class="svc-body" data-i="sv.c4body">
           <p class="svc-desc">Разведка по открытым источникам. Использую её в работе по делам клиентов. Только законные методы.</p>
@@ -590,27 +586,22 @@ body.no-3d .hero-hint{display:none}
     <h2 class="section-title r" style="transition-delay:.1s" data-i="pr.title">Порядок<br><em>работы</em></h2>
     <div class="process-grid">
       <div class="proc-step r" style="transition-delay:.15s">
-        <div class="proc-num">01</div>
         <div class="proc-name" data-i="pr.s1t">Изучение</div>
         <p class="proc-text" data-i="pr.s1x">Вы рассказываете ситуацию и присылаете документы. Изучаю всё, что есть по делу.</p>
       </div>
       <div class="proc-step r" style="transition-delay:.2s">
-        <div class="proc-num">02</div>
         <div class="proc-name" data-i="pr.s2t">Анализ</div>
         <p class="proc-text" data-i="pr.s2x">Проверяю факты, доказательства, сроки и слабые места позиции.</p>
       </div>
       <div class="proc-step r" style="transition-delay:.25s">
-        <div class="proc-num">03</div>
         <div class="proc-name" data-i="pr.s3t">Квалификация</div>
         <p class="proc-text" data-i="pr.s3x">Определяю, что это с точки зрения закона и какие нормы здесь работают.</p>
       </div>
       <div class="proc-step r" style="transition-delay:.3s">
-        <div class="proc-num">04</div>
         <div class="proc-name" data-i="pr.s4t">Варианты</div>
         <p class="proc-text" data-i="pr.s4x">Объясняю возможные сценарии развития событий и риски каждого.</p>
       </div>
       <div class="proc-step r" style="transition-delay:.35s">
-        <div class="proc-num">05</div>
         <div class="proc-name" data-i="pr.s5t">Работа</div>
         <p class="proc-text" data-i="pr.s5x">Только после этого беру дело в работу.</p>
       </div>
@@ -630,23 +621,18 @@ body.no-3d .hero-hint{display:none}
         <h2 class="section-title r" style="transition-delay:.1s" data-i="why.title">Что<br><em>важно знать</em></h2>
         <div class="rule r" style="transition-delay:.15s"></div>
         <div class="adv-item r" style="transition-delay:.2s">
-          <div class="adv-n">01</div>
           <div><div class="adv-title" data-i="why.i1t">OSINT в работе по делу</div><p class="adv-text" data-i="why.i1x">Использую разведку по открытым источникам: нахожу информацию и превращаю её в доказательства для суда.</p></div>
         </div>
         <div class="adv-item r" style="transition-delay:.25s">
-          <div class="adv-n">02</div>
           <div><div class="adv-title" data-i="why.i2t">Работаю по всему Казахстану</div><p class="adv-text" data-i="why.i2x">Офисы в Алматы и Шымкенте. Суды в других городах веду дистанционно.</p></div>
         </div>
         <div class="adv-item r" style="transition-delay:.3s">
-          <div class="adv-n">03</div>
           <div><div class="adv-title" data-i="why.i3t">Команда ZAN PROTECT</div><p class="adv-text" data-i="why.i3x">Юристы по судебным, корпоративным и цифровым вопросам.</p></div>
         </div>
         <div class="adv-item r" style="transition-delay:.35s">
-          <div class="adv-n">04</div>
           <div><div class="adv-title" data-i="why.i4t">Повышаю правовую грамотность</div><p class="adv-text" data-i="why.i4x">Выступаю в КазНУ и Университете Кунаева, читаю лекции для предпринимателей и госслужащих.</p></div>
         </div>
         <div class="adv-item r" style="transition-delay:.4s">
-          <div class="adv-n">05</div>
           <div><div class="adv-title" data-i="why.i5t">Конфиденциальность</div><p class="adv-text" data-i="why.i5x">Всё приватно и конфиденциально.</p></div>
         </div>
       </div>
